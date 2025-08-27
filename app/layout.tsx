@@ -1,0 +1,62 @@
+import type React from "react"
+import type { Metadata } from "next"
+import { Work_Sans, Open_Sans } from "next/font/google"
+import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { AuthProvider } from "@/contexts/auth-context"
+import { Navigation } from "@/components/navigation"
+
+const workSans = Work_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-work-sans",
+  weight: ["400", "600", "700"],
+})
+
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-open-sans",
+  weight: ["400", "500", "600"],
+})
+
+export const metadata: Metadata = {
+  title: "Binzo fun - 11 Mini Games Platform",
+  description: "Play 11 exciting mini-games including Ludo, Aviator, Color Prediction, Plinko, and more!",
+  generator: "v0.app",
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <style>{`
+html {
+  font-family: ${openSans.style.fontFamily};
+  --font-work-sans: ${workSans.variable};
+  --font-open-sans: ${openSans.variable};
+}
+        `}</style>
+      </head>
+      <body className={`${workSans.variable} ${openSans.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <AuthProvider>
+            <div className="min-h-screen flex flex-col">
+              <Navigation />
+              <main className="flex-1">{children}</main>
+              <footer className="glass border-t border-border/50 py-6 px-4">
+                <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
+                  <p>&copy; 2024 Binzo fun. All rights reserved. | Quick Links: Games | Profile | Support</p>
+                </div>
+              </footer>
+            </div>
+          </AuthProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  )
+}
