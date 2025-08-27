@@ -1,0 +1,121 @@
+/* Aviator Game Responsive Animations */
+
+@keyframes debris-fall {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(60px) rotate(360deg) scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes smoke-rise {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-40px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Responsive gradient backgrounds */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Mobile-optimized plane animations */
+@media (max-width: 640px) {
+  .plane-mobile {
+    transform: scale(0.8);
+  }
+  
+  .multiplier-mobile {
+    font-size: clamp(1.2rem, 8vw, 4rem) !important;
+  }
+  
+  .crash-effect-mobile {
+    transform: scale(0.7);
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .plane-tablet {
+    transform: scale(0.9);
+  }
+  
+  .multiplier-tablet {
+    font-size: clamp(1.8rem, 6vw, 6rem) !important;
+  }
+}
+
+/* Ultra-wide screen optimizations */
+@media (min-width: 1920px) {
+  .game-canvas-ultrawide {
+    max-height: 80vh;
+  }
+}
+
+/* Portrait mode optimizations */
+@media (orientation: portrait) and (max-width: 768px) {
+  .sidebar-portrait {
+    max-height: 25vh;
+  }
+  
+  .game-canvas-portrait {
+    min-height: 40vh;
+  }
+  
+  .control-panel-portrait {
+    padding: 0.5rem;
+  }
+}
+
+/* Landscape mode optimizations */
+@media (orientation: landscape) and (max-height: 500px) {
+  .header-landscape {
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .sidebar-landscape {
+    max-height: none;
+    width: 200px;
+  }
+  
+  .control-panel-landscape {
+    padding: 0.5rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .plane-svg {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse,
+  .animate-bounce,
+  .animate-ping {
+    animation: none;
+  }
+  
+  .transition-all {
+    transition: none;
+  }
+}
+
+/* Touch-friendly button sizing */
+@media (pointer: coarse) {
+  .touch-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

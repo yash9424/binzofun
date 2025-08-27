@@ -31,8 +31,9 @@ const gameComponents = {
   wheel: Wheel,
 }
 
-export default function GamePage({ params }: { params: { gameId: string } }) {
-  const GameComponent = gameComponents[params.gameId as keyof typeof gameComponents]
+export default async function GamePage({ params }: { params: Promise<{ gameId: string }> }) {
+  const { gameId } = await params
+  const GameComponent = gameComponents[gameId as keyof typeof gameComponents]
 
   if (!GameComponent) {
     notFound()

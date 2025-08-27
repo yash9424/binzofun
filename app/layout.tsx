@@ -33,24 +33,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <style>{`
-html {
-  font-family: ${openSans.style.fontFamily};
-  --font-work-sans: ${workSans.variable};
-  --font-open-sans: ${openSans.variable};
-}
-        `}</style>
-      </head>
-      <body className={`${workSans.variable} ${openSans.variable} antialiased`}>
+      <head />
+      <body className={`${workSans.variable} ${openSans.variable} antialiased font-sans`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <AuthProvider>
-            <div className="min-h-screen flex flex-col">
+            <div className="min-h-screen flex flex-col" suppressHydrationWarning>
               <Navigation />
               <main className="flex-1">{children}</main>
-              <footer className="glass border-t border-border/50 py-6 px-4">
-                <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-                  <p>&copy; 2024 Binzo fun. All rights reserved. | Quick Links: Games | Profile | Support</p>
+              <footer className="glass border-t border-border/50 py-4 sm:py-6 px-3 sm:px-4">
+                <div className="max-w-7xl mx-auto text-center text-xs sm:text-sm text-muted-foreground" suppressHydrationWarning>
+                  <p className="hidden sm:block">&copy; 2024 Binzo fun. All rights reserved. | Quick Links: Games | Profile | Support</p>
+                  <p className="sm:hidden">&copy; 2024 Binzo fun. All rights reserved.</p>
                 </div>
               </footer>
             </div>

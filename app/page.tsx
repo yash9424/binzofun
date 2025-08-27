@@ -16,20 +16,20 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-3 sm:p-4 md:p-6">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-10">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-2xl">🎮</span>
+        <div className="flex items-center justify-between mb-6 sm:mb-8 md:mb-10">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-lg sm:text-xl md:text-2xl">🎮</span>
             </div>
-            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
               All Games
             </h1>
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
           {games.map((game) => (
             <Link 
               key={game.id} 
@@ -47,13 +47,13 @@ export default function HomePage() {
                   }}
                 >
                   {/* Icon at top-left */}
-                  <div className="absolute top-3 left-3 w-10 h-10 bg-black/60 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
-                    <span className="text-xl">{game.icon}</span>
+                  <div className="absolute top-2 left-2 sm:top-3 sm:left-3 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-black/60 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center border border-white/20">
+                    <span className="text-sm sm:text-lg md:text-xl">{game.icon}</span>
                   </div>
                   
                   {/* Dark name bar at bottom */}
                   <div className="absolute bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-sm">
-                    <h3 className="text-white font-semibold text-sm text-center py-3 px-2">
+                    <h3 className="text-white font-semibold text-xs sm:text-sm text-center py-2 sm:py-3 px-1 sm:px-2">
                       {game.name}
                     </h3>
                   </div>
