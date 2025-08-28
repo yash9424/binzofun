@@ -146,19 +146,19 @@ export function PlinkoGame() {
       const rowProgress = (currentY / 80) * rows // Adjusted for actual peg area
       const currentRow = Math.floor(rowProgress)
 
-      const triangleWidth = (currentRow + 3) * 6 // Width increases with each row
+      const triangleWidth = (currentRow + 1) * 6 // Width increases with each row
       const triangleCenter = 50 // Center of triangle
       const leftBoundary = triangleCenter - triangleWidth / 2
       const rightBoundary = triangleCenter + triangleWidth / 2
 
       // Simulate peg collisions with more realistic physics
       if (currentRow < rows && step % 3 === 0) {
-        const pegSpacing = triangleWidth / (currentRow + 3)
+        const pegSpacing = triangleWidth / (currentRow + 1)
         const relativeX = currentX - leftBoundary
         const pegIndex = Math.round(relativeX / pegSpacing)
         const pegX = leftBoundary + pegIndex * pegSpacing
 
-        if (Math.abs(currentX - pegX) < 2.5 && pegIndex >= 0 && pegIndex <= currentRow + 2) {
+        if (Math.abs(currentX - pegX) < 2.5 && pegIndex >= 0 && pegIndex <= currentRow) {
           // Peg hit! Create visual effect
           createPegHit(currentX, currentY)
 
@@ -197,7 +197,7 @@ export function PlinkoGame() {
       )
     }
 
-    const finalTriangleWidth = (rows + 2) * 6
+    const finalTriangleWidth = rows * 6
     const finalLeftBoundary = 50 - finalTriangleWidth / 2
     const finalRightBoundary = 50 + finalTriangleWidth / 2
     const relativePosition = (currentX - finalLeftBoundary) / finalTriangleWidth
@@ -376,7 +376,7 @@ export function PlinkoGame() {
         </div>
 
         <div className="flex-1 p-2 sm:p-4 lg:p-6 order-1 lg:order-2">
-          <div className="relative bg-slate-800 rounded-lg h-64 sm:h-80 lg:h-full overflow-hidden">
+          <div className="relative bg-slate-800 rounded-lg h-80 sm:h-96 md:h-[500px] lg:h-full overflow-hidden">
             {/* Ball trails */}
             {balls.map((ball) =>
               ball.trail.map((point, index) => (

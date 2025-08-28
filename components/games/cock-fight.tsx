@@ -441,7 +441,7 @@ export function CockFightGame() {
             <div className="bg-red-600/20 backdrop-blur border-2 border-red-400 rounded-lg p-2 sm:p-3 lg:p-4">
               <div className="text-sm sm:text-lg lg:text-xl font-bold text-white">RED FIGHTER</div>
               <div className="text-xs sm:text-sm lg:text-base text-red-200">{odds.red}x odds</div>
-              <div className="text-xs sm:text-sm lg:text-base text-red-100">HP: {redCock.health}%</div>
+              <div className="text-xs sm:text-sm lg:text-base text-red-100">HP: {Math.round(redCock.health)}%</div>
               <div className="text-xs text-red-300">Action: {redCock.action}</div>
             </div>
             <div className="text-center">
@@ -452,7 +452,7 @@ export function CockFightGame() {
             <div className="bg-blue-600/20 backdrop-blur border-2 border-blue-400 rounded-lg p-2 sm:p-3 lg:p-4">
               <div className="text-sm sm:text-lg lg:text-xl font-bold text-white">BLUE FIGHTER</div>
               <div className="text-xs sm:text-sm lg:text-base text-blue-200">{odds.blue}x odds</div>
-              <div className="text-xs sm:text-sm lg:text-base text-blue-100">HP: {blueCock.health}%</div>
+              <div className="text-xs sm:text-sm lg:text-base text-blue-100">HP: {Math.round(blueCock.health)}%</div>
               <div className="text-xs text-blue-300">Action: {blueCock.action}</div>
             </div>
           </div>
