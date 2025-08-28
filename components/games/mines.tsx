@@ -140,8 +140,8 @@ export function MinesGame() {
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-slate-700">
-        <div className="flex items-center space-x-4">
+      <div className="flex items-center justify-between p-2 sm:p-4 lg:p-6 border-b border-slate-700 flex-wrap gap-2">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <Button asChild variant="ghost" size="sm" className="text-slate-300 hover:text-white">
             <Link href="/games">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -149,19 +149,25 @@ export function MinesGame() {
             </Link>
           </Button>
           <div>
-            <h1 className="font-work-sans font-bold text-2xl text-white">Mines</h1>
-            <p className="text-slate-400">Navigate the grid and avoid hidden bombs!</p>
+            <h1 className="font-work-sans font-bold text-xl sm:text-2xl text-white">Mines</h1>
+            <p className="text-slate-400 text-sm sm:text-base hidden sm:block">Navigate the grid and avoid hidden bombs!</p>
           </div>
         </div>
-        <Badge variant="outline" className="px-3 py-1 border-slate-600 text-slate-300">
-          <Bomb className="h-4 w-4 mr-1" />
-          Strategy Game
-        </Badge>
+        <div className="flex items-center gap-2">
+          <div className="text-right text-sm sm:text-base font-bold text-green-400">
+            ₹{balance}
+          </div>
+          <Badge variant="outline" className="px-2 sm:px-3 py-1 border-slate-600 text-slate-300 text-xs sm:text-sm">
+            <Bomb className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+            <span className="hidden sm:inline">Strategy Game</span>
+            <span className="sm:hidden">Game</span>
+          </Badge>
+        </div>
       </div>
 
-      <div className="flex h-[calc(100vh-120px)]">
-        {/* Left Sidebar - Controls */}
-        <div className="w-80 bg-slate-800 p-6 space-y-6 border-r border-slate-700">
+      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-120px)]">
+        {/* Controls - Top on mobile, Left sidebar on desktop */}
+        <div className="w-full lg:w-80 bg-slate-800 p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 lg:space-y-6 border-b lg:border-b-0 lg:border-r border-slate-700 order-2 lg:order-1">
           <div className="flex bg-slate-700 rounded-lg p-1">
             <Button
               variant={gameMode === "manual" ? "default" : "ghost"}
@@ -318,15 +324,15 @@ export function MinesGame() {
           </Button>
         </div>
 
-        {/* Right Side - Game Grid */}
-        <div className="flex-1 flex items-center justify-center p-8">
-          <div className="w-full max-w-2xl">
-            <div className="grid grid-cols-5 gap-3 mx-auto" style={{ maxWidth: "500px" }}>
+        {/* Game Grid */}
+        <div className="flex-1 flex items-center justify-center p-2 sm:p-4 lg:p-8 order-1 lg:order-2">
+          <div className="w-full max-w-lg lg:max-w-2xl">
+            <div className="grid grid-cols-5 gap-1 sm:gap-2 lg:gap-3 mx-auto">
               {grid.map((tile) => (
                 <Button
                   key={tile.index}
                   variant="outline"
-                  className={`aspect-square p-0 text-lg font-semibold border-2 transition-all duration-200 ${
+                  className={`aspect-square p-0 text-sm sm:text-lg font-semibold border border-2 sm:border-2 transition-all duration-200 min-h-[40px] sm:min-h-[60px] lg:min-h-[80px] ${
                     tile.revealed
                       ? tile.isMine
                         ? "bg-red-600 border-red-500 hover:bg-red-700"
@@ -335,15 +341,14 @@ export function MinesGame() {
                   }`}
                   onClick={() => revealTile(tile.index)}
                   disabled={gameState !== "playing" || tile.revealed}
-                  style={{ minHeight: "80px" }}
                 >
                   {tile.revealed ? (
                     tile.isMine ? (
-                      <div className="text-4xl animate-pulse" style={{ filter: 'drop-shadow(0 0 10px rgba(239, 68, 68, 0.8))' }}>
+                      <div className="text-lg sm:text-3xl lg:text-4xl animate-pulse" style={{ filter: 'drop-shadow(0 0 6px rgba(239, 68, 68, 0.8))' }}>
                         💣
                       </div>
                     ) : (
-                      <div className="text-5xl" style={{ filter: 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.8))' }}>
+                      <div className="text-xl sm:text-4xl lg:text-5xl" style={{ filter: 'drop-shadow(0 0 10px rgba(59, 130, 246, 0.8))' }}>
                         💎
                       </div>
                     )
@@ -353,11 +358,11 @@ export function MinesGame() {
             </div>
 
             {gameState === "betting" && (
-              <div className="text-center mt-6 text-slate-400">Click "Bet" to start the game and reveal tiles</div>
+              <div className="text-center mt-3 sm:mt-4 lg:mt-6 text-slate-400 text-xs sm:text-sm lg:text-base">Click "Bet" to start the game and reveal tiles</div>
             )}
 
             {gameState === "playing" && (
-              <div className="text-center mt-6 text-slate-300">
+              <div className="text-center mt-3 sm:mt-4 lg:mt-6 text-slate-300 text-xs sm:text-sm lg:text-base">
                 Click tiles to reveal gems. Avoid the {mineCount} hidden mines!
               </div>
             )}

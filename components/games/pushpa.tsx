@@ -211,28 +211,28 @@ export function PushpaGame() {
   return (
     <div className="min-h-screen bg-slate-900 text-white relative overflow-hidden">
       {/* Back Button */}
-      <div className="absolute top-4 left-4 z-50">
+      <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-50">
         <Button
           variant="outline"
           size="sm"
-          className="bg-slate-800/80 border-slate-600 hover:bg-slate-700 text-white"
+          className="bg-slate-800/80 border-slate-600 hover:bg-slate-700 text-white text-xs sm:text-sm touch-manipulation"
           onClick={() => window.history.back()}
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
           Back to Games
         </Button>
       </div>
       
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-4">
-        <div className="w-full max-w-7xl bg-slate-800/20 rounded-lg p-4 mb-6">
-          <div className="text-center mb-6">
-            <div className={`text-8xl font-bold mb-4 ${crashed ? "text-red-500" : "text-white"}`}>
+      <div className="flex-1 flex flex-col items-center justify-center px-3 sm:px-4 py-3 sm:py-4">
+        <div className="w-full max-w-7xl bg-slate-800/20 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+          <div className="text-center mb-4 sm:mb-6">
+            <div className={`text-4xl sm:text-6xl lg:text-8xl font-bold mb-2 sm:mb-4 ${crashed ? "text-red-500" : "text-white"}`}>
               {multiplier.toFixed(2)}x
             </div>
-            {crashed && <div className="text-red-500 text-sm font-semibold animate-pulse">CRASHED!</div>}
+            {crashed && <div className="text-red-500 text-xs sm:text-sm font-semibold animate-pulse">CRASHED!</div>}
           </div>
 
-          <div className="relative h-80 mb-6 overflow-hidden bg-gradient-to-b from-teal-900/40 via-cyan-800/30 to-emerald-700/40 rounded-lg">
+          <div className="relative h-48 sm:h-64 lg:h-80 mb-4 sm:mb-6 overflow-hidden bg-gradient-to-b from-teal-900/40 via-cyan-800/30 to-emerald-700/40 rounded-lg">
             <div className="absolute inset-0 bg-gradient-to-b from-teal-400/20 via-cyan-500/20 to-emerald-400/30"></div>
 
             {/* Far background - slowest moving mountains */}
@@ -374,14 +374,14 @@ export function PushpaGame() {
               <RealisticTruck crashed={crashed} gameActive={gameActive} />
             </div>
 
-            <div className="absolute top-4 left-6 right-6">
-              <div className="w-full h-2 bg-gray-800/60 rounded-full overflow-hidden backdrop-blur-sm">
+            <div className="absolute top-2 sm:top-4 left-3 sm:left-6 right-3 sm:right-6">
+              <div className="w-full h-1.5 sm:h-2 bg-gray-800/60 rounded-full overflow-hidden backdrop-blur-sm">
                 <div
                   className="h-full bg-gradient-to-r from-cyan-500 to-teal-400 transition-all duration-100 rounded-full shadow-lg"
                   style={{ width: `${Math.min((multiplier - 1) * 20, 80)}%` }}
                 ></div>
               </div>
-              <div className="text-sm text-gray-300 mt-2 font-semibold">
+              <div className="text-xs sm:text-sm text-gray-300 mt-1 sm:mt-2 font-semibold">
                 Journey Progress: {Math.min(Math.floor((multiplier - 1) * 20), 80)}%
               </div>
             </div>
@@ -389,21 +389,21 @@ export function PushpaGame() {
         </div>
 
         <div className="w-full max-w-4xl">
-          <div className="bg-slate-800/50 rounded-lg p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-slate-800/50 rounded-lg p-3 sm:p-4 lg:p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm">Bet Amount</span>
-                  <div className="flex space-x-1">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-2 sm:gap-0">
+                  <span className="text-xs sm:text-sm">Bet Amount</span>
+                  <div className="flex flex-wrap gap-1">
                     {quickBetAmounts.map((amount) => (
                       <Button
                         key={amount}
                         size="sm"
                         variant="outline"
-                        className="text-xs px-2 py-1 bg-transparent"
+                        className="text-xs px-2 py-1 bg-transparent touch-manipulation"
                         onClick={() => setBetAmount(amount)}
                       >
-                        {amount}
+                        ₹{amount}
                       </Button>
                     ))}
                   </div>
@@ -412,13 +412,13 @@ export function PushpaGame() {
                   type="number"
                   value={betAmount}
                   onChange={(e) => setBetAmount(Number(e.target.value))}
-                  className="bg-slate-700 border-slate-600"
+                  className="bg-slate-700 border-slate-600 text-sm sm:text-base"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm">Auto Cashout</span>
+                  <span className="text-xs sm:text-sm">Auto Cashout</span>
                   <Switch checked={autoCashout} onCheckedChange={setAutoCashout} />
                 </div>
                 <Input
@@ -427,15 +427,15 @@ export function PushpaGame() {
                   value={autoCashoutAt}
                   onChange={(e) => setAutoCashoutAt(Number(e.target.value))}
                   disabled={!autoCashout}
-                  className="bg-slate-700 border-slate-600"
+                  className="bg-slate-700 border-slate-600 text-sm sm:text-base"
                 />
               </div>
 
-              <div className="flex flex-col space-y-2">
+              <div className="flex flex-row md:flex-col gap-2 md:space-y-0">
                 <Button
                   size="sm"
                   variant="outline"
-                  className="text-xs bg-transparent hover:bg-slate-600"
+                  className="text-xs bg-transparent hover:bg-slate-600 flex-1 md:flex-none touch-manipulation"
                   onClick={() => setBetAmount(Math.min(balance * 0.1, 500))}
                 >
                   SELECT
@@ -443,7 +443,7 @@ export function PushpaGame() {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="text-xs bg-transparent hover:bg-slate-600"
+                  className="text-xs bg-transparent hover:bg-slate-600 flex-1 md:flex-none touch-manipulation"
                   onClick={() => setBetAmount(Math.min(balance, 2000))}
                 >
                   MAX
@@ -451,12 +451,12 @@ export function PushpaGame() {
               </div>
             </div>
 
-            <div className="mt-6 text-center">
+            <div className="mt-4 sm:mt-6 text-center">
               {!gameActive ? (
                 <Button
                   onClick={startGame}
                   disabled={balance < betAmount || betAmount <= 0}
-                  className={`px-16 py-4 text-xl font-bold rounded-lg transition-all duration-200 ${
+                  className={`px-8 sm:px-12 lg:px-16 py-3 sm:py-4 text-base sm:text-lg lg:text-xl font-bold rounded-lg transition-all duration-200 touch-manipulation w-full sm:w-auto ${
                     balance < betAmount || betAmount <= 0
                       ? "bg-gray-600 text-gray-400 cursor-not-allowed"
                       : "bg-cyan-600 hover:bg-cyan-700 hover:scale-105 text-white shadow-lg hover:shadow-cyan-500/25"
@@ -468,7 +468,7 @@ export function PushpaGame() {
                 <Button
                   onClick={cashOut}
                   disabled={crashed}
-                  className={`px-16 py-4 text-xl font-bold rounded-lg transition-all duration-200 ${
+                  className={`px-8 sm:px-12 lg:px-16 py-3 sm:py-4 text-base sm:text-lg lg:text-xl font-bold rounded-lg transition-all duration-200 touch-manipulation w-full sm:w-auto ${
                     crashed
                       ? "bg-gray-600 text-gray-400 cursor-not-allowed"
                       : "bg-red-600 hover:bg-red-700 hover:scale-105 text-white shadow-lg hover:shadow-red-500/25 animate-pulse"
@@ -483,8 +483,8 @@ export function PushpaGame() {
       </div>
 
       {gameHistory.length > 0 && (
-        <div className="fixed top-20 right-4 bg-slate-800/90 rounded-lg p-4 max-w-xs">
-          <h3 className="text-sm font-semibold mb-2">Recent Results</h3>
+        <div className="fixed top-16 sm:top-20 right-2 sm:right-4 bg-slate-800/90 rounded-lg p-2 sm:p-4 max-w-xs z-40">
+          <h3 className="text-xs sm:text-sm font-semibold mb-2">Recent Results</h3>
           <div className="flex flex-wrap gap-1">
             {gameHistory.map((result, index) => (
               <Badge key={index} variant={result < 2 ? "destructive" : "default"} className="text-xs">

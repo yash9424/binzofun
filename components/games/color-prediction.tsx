@@ -72,25 +72,27 @@ export function ColorPredictionGame() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white space-y-6 p-6">
-      <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-black text-white space-y-4 sm:space-y-6 p-2 sm:p-4 lg:p-6">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <Button asChild variant="ghost" size="sm" className="text-white hover:bg-gray-800">
           <Link href="/games">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Games
           </Link>
         </Button>
-        <div>
-          <h1 className="font-work-sans font-bold text-2xl md:text-3xl text-white">Color Prediction</h1>
-          <p className="text-gray-400">Predict colors and numbers to win</p>
+        <div className="text-center flex-1">
+          <h1 className="font-work-sans font-bold text-xl sm:text-2xl md:text-3xl text-white">Color Prediction</h1>
+          <p className="text-gray-400 text-sm sm:text-base">Predict colors and numbers to win</p>
         </div>
-        <div></div>
+        <div className="text-right text-sm sm:text-base font-bold text-green-400">
+          ₹{balance}
+        </div>
       </div>
 
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
         <Card className="bg-gray-900 border-gray-700">
-          <CardContent className="p-4">
-            <div className={`rounded-lg p-8 text-center relative ${
+          <CardContent className="p-2 sm:p-4">
+            <div className={`rounded-lg p-4 sm:p-6 lg:p-8 text-center relative ${
               result !== null 
                 ? getNumberColor(result) === "green" 
                   ? "bg-green-500" 
@@ -102,57 +104,57 @@ export function ColorPredictionGame() {
                 : "bg-gray-700"
             }`}>
               {result !== null ? (
-                <div className="text-6xl font-bold text-white">{result}</div>
+                <div className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white">{result}</div>
               ) : (
-                <div className="text-6xl font-bold text-white">?</div>
+                <div className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white">?</div>
               )}
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-gray-900 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white text-center">Countdown</CardTitle>
+          <CardHeader className="pb-2 sm:pb-4">
+            <CardTitle className="text-white text-center text-lg sm:text-xl">Countdown</CardTitle>
           </CardHeader>
-          <CardContent className="text-center">
-            <div className="w-16 h-16 bg-gray-800 border-2 border-gray-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+          <CardContent className="text-center pt-0">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-800 border-2 border-gray-600 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold mx-auto mb-4">
               {countdown}
             </div>
-            <div className="flex justify-center space-x-4 text-xs">
+            <div className="flex justify-center space-x-4 sm:space-x-6 text-xs sm:text-sm">
               <div>
                 <div className="text-gray-300">Min</div>
-                <div className="text-white">100</div>
+                <div className="text-white">₹100</div>
               </div>
               <div>
                 <div className="text-gray-300">Max</div>
-                <div className="text-white">2K</div>
+                <div className="text-white">₹2K</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-gray-900 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white text-center">Colors</CardTitle>
+          <CardHeader className="pb-2 sm:pb-4">
+            <CardTitle className="text-white text-center text-lg sm:text-xl">Colors</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               <Button
                 onClick={() => placeBet("green")}
                 disabled={gameState !== "betting"}
-                className={`h-16 bg-green-500 hover:bg-green-600 text-white font-bold ${
+                className={`h-12 sm:h-16 bg-green-500 hover:bg-green-600 text-white font-bold text-sm sm:text-base ${
                   selectedBet === "green" ? "ring-2 ring-yellow-400" : ""
                 }`}
               >
                 <div>
                   <div>Green</div>
-                  <div className="text-xs">x2.0 or x1.6</div>
+                  <div className="text-xs">x2.0</div>
                 </div>
               </Button>
               <Button
                 onClick={() => placeBet("violet")}
                 disabled={gameState !== "betting"}
-                className={`h-16 bg-purple-500 hover:bg-purple-600 text-white font-bold ${
+                className={`h-12 sm:h-16 bg-purple-500 hover:bg-purple-600 text-white font-bold text-sm sm:text-base ${
                   selectedBet === "violet" ? "ring-2 ring-yellow-400" : ""
                 }`}
               >
@@ -164,13 +166,13 @@ export function ColorPredictionGame() {
               <Button
                 onClick={() => placeBet("red")}
                 disabled={gameState !== "betting"}
-                className={`h-16 bg-red-500 hover:bg-red-600 text-white font-bold ${
+                className={`h-12 sm:h-16 bg-red-500 hover:bg-red-600 text-white font-bold text-sm sm:text-base ${
                   selectedBet === "red" ? "ring-2 ring-yellow-400" : ""
                 }`}
               >
                 <div>
                   <div>Red</div>
-                  <div className="text-xs">x2.0 or x1.6</div>
+                  <div className="text-xs">x2.0</div>
                 </div>
               </Button>
             </div>
@@ -178,11 +180,11 @@ export function ColorPredictionGame() {
         </Card>
 
         <Card className="bg-gray-900 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white text-center">Numbers</CardTitle>
+          <CardHeader className="pb-2 sm:pb-4">
+            <CardTitle className="text-white text-center text-lg sm:text-xl">Numbers</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-5 gap-1 sm:gap-2">
               {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => {
                 const colorClass = getNumberColor(num) === "green" ? "bg-green-500" :
                                   getNumberColor(num) === "red" ? "bg-red-500" :
@@ -194,7 +196,7 @@ export function ColorPredictionGame() {
                     key={num}
                     onClick={() => placeBet(num)}
                     disabled={gameState !== "betting"}
-                    className={`h-12 ${colorClass} hover:opacity-80 text-white font-bold ${
+                    className={`h-10 sm:h-12 ${colorClass} hover:opacity-80 text-white font-bold text-sm sm:text-base ${
                       selectedBet === num ? "ring-2 ring-yellow-400" : ""
                     }`}
                   >
@@ -207,16 +209,16 @@ export function ColorPredictionGame() {
         </Card>
 
         <Card className="bg-gray-900 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white">Game Controls</CardTitle>
+          <CardHeader className="pb-2 sm:pb-4">
+            <CardTitle className="text-white text-lg sm:text-xl">Game Controls</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span>Balance: {balance}</span>
-              <span>WIN: 0</span>
+            <div className="flex justify-between text-sm sm:text-base">
+              <span>Balance: ₹{balance}</span>
+              <span>WIN: ₹0</span>
             </div>
             
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-center gap-3 sm:justify-between">
               <Button 
                 onClick={() => {
                   setSelectedBet(null)
@@ -225,7 +227,7 @@ export function ColorPredictionGame() {
                   setResult(null)
                 }}
                 size="sm" 
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
               >
                 Try Again
               </Button>
@@ -234,24 +236,24 @@ export function ColorPredictionGame() {
                 <Button 
                   onClick={() => setBetAmount(Math.max(10, betAmount - 50))}
                   size="sm" 
-                  className="bg-gray-600 hover:bg-gray-700"
+                  className="bg-gray-600 hover:bg-gray-700 w-8 h-8 p-0"
                 >
                   -
                 </Button>
-                <div className="bg-gray-800 border border-gray-700 px-4 py-2 rounded min-w-[80px] text-center">
+                <div className="bg-gray-800 border border-gray-700 px-3 sm:px-4 py-2 rounded min-w-[70px] sm:min-w-[80px] text-center">
                   <div className="text-xs text-gray-300">Bet</div>
-                  <div className="font-bold">{betAmount}</div>
+                  <div className="font-bold text-sm sm:text-base">₹{betAmount}</div>
                 </div>
                 <Button 
                   onClick={() => setBetAmount(betAmount + 50)}
                   size="sm" 
-                  className="bg-gray-600 hover:bg-gray-700"
+                  className="bg-gray-600 hover:bg-gray-700 w-8 h-8 p-0"
                 >
                   +
                 </Button>
               </div>
               
-              <Button size="sm" className="bg-red-600 hover:bg-red-700">
+              <Button size="sm" className="bg-red-600 hover:bg-red-700 w-full sm:w-auto">
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -259,14 +261,14 @@ export function ColorPredictionGame() {
         </Card>
 
         <Card className="bg-gray-900 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white">Game Status</CardTitle>
+          <CardHeader className="pb-2 sm:pb-4">
+            <CardTitle className="text-white text-lg sm:text-xl">Game Status</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-4 gap-4 text-xs text-center">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs sm:text-sm text-center">
               <div>
                 <div className="text-gray-400">Period</div>
-                <div className="text-white">{currentPeriod}</div>
+                <div className="text-white text-xs sm:text-sm">{currentPeriod}</div>
               </div>
               <div>
                 <div className="text-gray-400">Result</div>

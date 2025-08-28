@@ -175,7 +175,7 @@ export function ChickenRoadGame() {
     for (let y = 0; y < GRID_HEIGHT; y++) {
       for (let x = 0; x < GRID_WIDTH; x++) {
         let cellContent = ""
-        let cellClass = "w-16 h-16 flex items-center justify-center text-4xl relative "
+        let cellClass = "w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 lg:w-16 lg:h-16 flex items-center justify-center text-lg sm:text-2xl md:text-3xl lg:text-4xl relative "
         let hasObstacle = false
 
         if (x === 0) {
@@ -200,7 +200,7 @@ export function ChickenRoadGame() {
 
         if (playerPos.x === x && playerPos.y === y) {
           cellContent = "🐔"
-          cellClass += "text-5xl z-20 relative transform scale-x-[-1] "
+          cellClass += "text-xl sm:text-3xl md:text-4xl lg:text-5xl z-20 relative transform scale-x-[-1] "
         }
  
         obstacles.forEach((obstacle) => {
@@ -211,15 +211,15 @@ export function ChickenRoadGame() {
             switch (obstacle.type) {
               case "car":
                 cellContent = "🚗"
-                cellClass += "transform rotate-[270deg] text-4xl drop-shadow-lg "
+                cellClass += "transform rotate-[270deg] text-lg sm:text-2xl md:text-3xl lg:text-4xl drop-shadow-lg "
                 break
               case "truck":
                 cellContent = "🚛"
-                cellClass += "transform rotate-[270deg] text-5xl drop-shadow-lg "
+                cellClass += "transform rotate-[270deg] text-xl sm:text-3xl md:text-4xl lg:text-5xl drop-shadow-lg "
                 break
               case "log":
                 cellContent = "🚐"
-                cellClass += "transform rotate-[270deg] text-4xl drop-shadow-lg "
+                cellClass += "transform rotate-[270deg] text-lg sm:text-2xl md:text-3xl lg:text-4xl drop-shadow-lg "
                 break
             }
           }
@@ -247,28 +247,28 @@ export function ChickenRoadGame() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white space-y-6 p-6">
-      <div className="w-full max-w-4xl">
-        <div className="flex items-center justify-between mb-4">
+    <div className="min-h-screen bg-black text-white space-y-4 p-2 sm:p-4 lg:p-6">
+      <div className="w-full max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <Button asChild variant="ghost" size="sm" className="text-white hover:bg-gray-800">
             <Link href="/games">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Link>
           </Button>
-          <div className="text-center">
-            <h1 className="font-bold text-2xl text-white drop-shadow-lg">
+          <div className="text-center flex-1">
+            <h1 className="font-bold text-xl sm:text-2xl text-white drop-shadow-lg">
               🐔 Chicken Road
             </h1>
           </div>
-          <div className="text-white font-bold text-right">
+          <div className="text-white font-bold text-right text-sm sm:text-base">
             <div>Score: {score}</div>
-            <div className="text-sm text-yellow-400">Speed Round: {Math.floor(score / 500) + 1}</div>
+            <div className="text-xs sm:text-sm text-yellow-400">Speed Round: {Math.floor(score / 500) + 1}</div>
           </div>
         </div>
 
-        <div className="relative bg-gray-900 border border-gray-700 rounded-lg p-2 shadow-xl">
-          <div className="grid grid-cols-11 gap-0 rounded overflow-hidden ">{renderGrid()}</div>
+        <div className="relative bg-gray-900 border border-gray-700 rounded-lg p-1 sm:p-2 shadow-xl overflow-hidden">
+          <div className="grid grid-cols-11 gap-0 rounded overflow-hidden max-w-full">{renderGrid()}</div>
           
           {/* Multiplier circles on road */}
           <div className="absolute inset-0 pointer-events-none" >
@@ -278,7 +278,7 @@ export function ChickenRoadGame() {
               return (
                 <div 
                   key={i}
-                  className="absolute w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white text-xs font-bold animate-pulse z-10"
+                  className="absolute w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full border border-white sm:border-2 shadow-lg flex items-center justify-center text-white text-xs sm:text-xs md:text-sm font-bold animate-pulse z-10"
                   style={{
                     left: `${(cellX * 100) / 11 + 100/22}%`,
                     top: `${(cellY * 100) / 10 + 100/20}%`,
@@ -314,8 +314,46 @@ export function ChickenRoadGame() {
           )}
         </div>
 
+        {/* Mobile Touch Controls */}
+        <div className="mt-4 grid grid-cols-3 gap-2 max-w-xs mx-auto sm:hidden">
+          <div></div>
+          <Button 
+            onClick={() => movePlayer("up")} 
+            className="bg-gray-700 hover:bg-gray-600 text-2xl p-4"
+            disabled={!isPlaying || gameOver}
+          >
+            ⬆️
+          </Button>
+          <div></div>
+          <Button 
+            onClick={() => movePlayer("left")} 
+            className="bg-gray-700 hover:bg-gray-600 text-2xl p-4"
+            disabled={!isPlaying || gameOver}
+          >
+            ⬅️
+          </Button>
+          <Button 
+            onClick={() => movePlayer("down")} 
+            className="bg-gray-700 hover:bg-gray-600 text-2xl p-4"
+            disabled={!isPlaying || gameOver}
+          >
+            ⬇️
+          </Button>
+          <Button 
+            onClick={() => movePlayer("right")} 
+            className="bg-gray-700 hover:bg-gray-600 text-2xl p-4"
+            disabled={!isPlaying || gameOver}
+          >
+            ➡️
+          </Button>
+        </div>
+        
         <div className="mt-4 text-center text-white">
-          <p className="text-sm opacity-80">Use WASD or Arrow Keys to move • Avoid vehicles • Reach the right to score!</p>
+          <p className="text-xs sm:text-sm opacity-80">
+            <span className="hidden sm:inline">Use WASD or Arrow Keys to move • </span>
+            <span className="sm:hidden">Use touch controls above • </span>
+            Avoid vehicles • Reach the right to score!
+          </p>
         </div>
       </div>
     </div>

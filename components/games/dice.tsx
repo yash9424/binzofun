@@ -125,8 +125,8 @@ export function DiceGame() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
-      <div className="flex items-center justify-between p-4 border-b border-slate-700">
-        <Button asChild variant="ghost" size="sm" className="text-slate-300 hover:text-white">
+      <div className="flex flex-col sm:flex-row items-center justify-between p-3 sm:p-4 border-b border-slate-700 gap-3 sm:gap-0">
+        <Button asChild variant="ghost" size="sm" className="text-slate-300 hover:text-white self-start">
           <Link href="/games">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Games
@@ -140,13 +140,13 @@ export function DiceGame() {
 
       <div className="flex justify-center min-h-[calc(100vh-80px)]">
         <div className="flex flex-col lg:flex-row max-w-7xl w-full">
-          <div className="w-full lg:w-80 bg-slate-800 border-r border-slate-700 p-6 space-y-6">
+          <div className="w-full lg:w-80 bg-slate-800 border-r border-slate-700 p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 order-2 lg:order-1">
             <div className="flex bg-slate-700 rounded-lg p-1">
               <Button
                 variant={!isAutoMode ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setIsAutoMode(false)}
-                className="flex-1 bg-slate-600 hover:bg-slate-500 text-white"
+                className="flex-1 bg-slate-600 hover:bg-slate-500 text-white text-sm sm:text-base touch-manipulation"
               >
                 Manual
               </Button>
@@ -154,7 +154,7 @@ export function DiceGame() {
                 variant={isAutoMode ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setIsAutoMode(true)}
-                className="flex-1 text-slate-300 hover:bg-slate-600"
+                className="flex-1 text-slate-300 hover:bg-slate-600 text-sm sm:text-base touch-manipulation"
               >
                 Auto
               </Button>
@@ -162,8 +162,8 @@ export function DiceGame() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-sm text-slate-300">Bet Amount</label>
-                <span className="text-sm text-slate-400">${betAmount.toFixed(2)}</span>
+                <label className="text-xs sm:text-sm text-slate-300">Bet Amount</label>
+                <span className="text-xs sm:text-sm text-slate-400">₹{betAmount.toFixed(2)}</span>
               </div>
               <div className="relative">
                 <Input
@@ -172,7 +172,7 @@ export function DiceGame() {
                   onChange={(e) => setBetAmount(Math.max(0, Number.parseFloat(e.target.value) || 0))}
                   min="0"
                   step="0.01"
-                  className="bg-slate-700 border-slate-600 text-white text-lg font-mono pr-20"
+                  className="bg-slate-700 border-slate-600 text-white text-base sm:text-lg font-mono pr-16 sm:pr-20"
                   placeholder="10.00"
                   disabled={isRolling || isAutoMode}
                 />
@@ -182,7 +182,7 @@ export function DiceGame() {
                     size="sm"
                     onClick={() => setBetAmount((prev) => Math.max(0.01, prev / 2))}
                     disabled={isRolling || isAutoMode}
-                    className="h-6 w-6 p-0 text-orange-400 hover:bg-slate-600"
+                    className="h-6 w-6 p-0 text-orange-400 hover:bg-slate-600 touch-manipulation"
                   >
                     ½
                   </Button>
@@ -191,7 +191,7 @@ export function DiceGame() {
                     size="sm"
                     onClick={() => setBetAmount((prev) => Math.min(balance, prev * 2))}
                     disabled={isRolling || isAutoMode}
-                    className="h-6 w-6 p-0 text-orange-400 hover:bg-slate-600"
+                    className="h-6 w-6 p-0 text-orange-400 hover:bg-slate-600 touch-manipulation"
                   >
                     2x
                   </Button>
@@ -201,15 +201,15 @@ export function DiceGame() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-sm text-slate-300">Profit on Win</label>
-                <span className="text-sm text-slate-400">${profitOnWin.toFixed(2)}</span>
+                <label className="text-xs sm:text-sm text-slate-300">Profit on Win</label>
+                <span className="text-xs sm:text-sm text-slate-400">₹{profitOnWin.toFixed(2)}</span>
               </div>
               <div className="relative">
                 <Input
                   type="text"
                   value={profitOnWin.toFixed(2)}
                   readOnly
-                  className="bg-slate-700 border-slate-600 text-white text-lg font-mono pr-8"
+                  className="bg-slate-700 border-slate-600 text-white text-base sm:text-lg font-mono pr-8"
                   placeholder="0.00"
                 />
                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
@@ -221,7 +221,7 @@ export function DiceGame() {
             <Button
               onClick={rollDice}
               disabled={betAmount > balance || betAmount <= 0 || isRolling}
-              className="w-full h-12 bg-green-500 hover:bg-green-600 text-white font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-12 sm:h-14 bg-green-500 hover:bg-green-600 text-white font-bold text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
             >
               {isRolling ? (
                 <>
@@ -233,21 +233,21 @@ export function DiceGame() {
               )}
             </Button>
 
-            <div className="text-center p-4 bg-slate-700 rounded-lg">
-              <div className="text-sm text-slate-400">Balance</div>
-              <div className="text-2xl font-bold text-white">₹{balance.toFixed(2)}</div>
+            <div className="text-center p-3 sm:p-4 bg-slate-700 rounded-lg">
+              <div className="text-xs sm:text-sm text-slate-400">Balance</div>
+              <div className="text-xl sm:text-2xl font-bold text-white">₹{balance.toFixed(2)}</div>
             </div>
           </div>
 
-          <div className="flex-1 p-6 flex items-center justify-center">
-            <div className="w-full max-w-3xl space-y-8">
+          <div className="flex-1 p-3 sm:p-4 lg:p-6 flex items-center justify-center order-1 lg:order-2">
+            <div className="w-full max-w-3xl space-y-4 sm:space-y-6 lg:space-y-8">
               {gameHistory.length > 0 && (
                 <div className="text-center">
-                  <div className="flex flex-wrap justify-center gap-2 mb-4">
+                  <div className="flex flex-wrap justify-center gap-1 sm:gap-2 mb-3 sm:mb-4 overflow-x-auto pb-2">
                     {gameHistory.slice(0, 6).map((game, index) => (
                       <div
                         key={game.timestamp}
-                        className={`px-4 py-2 rounded-full text-sm font-bold font-mono ${
+                        className={`px-2 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold font-mono flex-shrink-0 ${
                           game.won ? "bg-green-500 text-white" : "bg-slate-600 text-slate-300"
                         }`}
                       >
@@ -258,7 +258,7 @@ export function DiceGame() {
                 </div>
               )}
 
-              <div className="flex justify-between text-sm text-slate-400 px-4">
+              <div className="flex justify-between text-xs sm:text-sm text-slate-400 px-2 sm:px-4">
                 <span>1</span>
                 <span>25</span>
                 <span>50</span>
@@ -266,13 +266,13 @@ export function DiceGame() {
                 <span>100</span>
               </div>
 
-              <div className="relative px-4">
+              <div className="relative px-2 sm:px-4">
                 {diceResult !== null && !isRolling && (
                   <div
                     className="absolute top-1/2 transform -translate-y-1/2 -translate-x-1/2 z-10"
                     style={{ left: `${((diceResult - 1) / 99) * 100}%` }}
                   >
-                    <div className="relative bg-white border-2 border-gray-300 shadow-lg px-2 py-1 rounded-md">
+                    <div className="relative bg-white border-2 border-gray-300 shadow-lg px-1 sm:px-2 py-1 rounded-md">
                       <div className="text-xs font-bold text-gray-800 font-mono whitespace-nowrap">
                         {diceResult.toFixed(2)}
                       </div>
@@ -280,7 +280,7 @@ export function DiceGame() {
                   </div>
                 )}
 
-                <div className="h-8 bg-slate-700 rounded-full relative overflow-hidden">
+                <div className="h-6 sm:h-8 bg-slate-700 rounded-full relative overflow-hidden">
                   <div
                     className="absolute top-0 left-0 h-full bg-red-500"
                     style={{
@@ -295,7 +295,7 @@ export function DiceGame() {
                     }}
                   />
                   <div
-                    className="absolute top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-6 h-6 bg-blue-500 rounded border-2 border-white shadow-lg cursor-pointer"
+                    className="absolute top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 rounded border-2 border-white shadow-lg cursor-pointer"
                     style={{ left: `${((target[0] - 1) / 99) * 100}%` }}
                   />
                 </div>
@@ -308,27 +308,27 @@ export function DiceGame() {
                   value={target[0]}
                   onChange={(e) => setTarget([Number.parseFloat(e.target.value)])}
                   disabled={isRolling || isAutoMode}
-                  className="absolute top-0 left-4 right-4 w-[calc(100%-2rem)] h-8 opacity-0 cursor-pointer"
+                  className="absolute top-0 left-2 right-2 sm:left-4 sm:right-4 w-[calc(100%-1rem)] sm:w-[calc(100%-2rem)] h-6 sm:h-8 opacity-0 cursor-pointer"
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
-                <div className="text-center">
-                  <div className="text-sm text-slate-400 mb-1">Multiplier</div>
-                  <div className="text-xl font-bold text-white flex items-center justify-center">
-                    {multiplier.toFixed(4)} <span className="ml-1 text-lg">×</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 max-w-2xl mx-auto">
+                <div className="text-center bg-slate-800 sm:bg-transparent p-3 sm:p-0 rounded-lg sm:rounded-none">
+                  <div className="text-xs sm:text-sm text-slate-400 mb-1">Multiplier</div>
+                  <div className="text-lg sm:text-xl font-bold text-white flex items-center justify-center">
+                    {multiplier.toFixed(4)} <span className="ml-1 text-base sm:text-lg">×</span>
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-sm text-slate-400 mb-1">Roll {isOver ? "Over" : "Under"}</div>
-                  <div className="text-xl font-bold text-white flex items-center justify-center">
+                <div className="text-center bg-slate-800 sm:bg-transparent p-3 sm:p-0 rounded-lg sm:rounded-none">
+                  <div className="text-xs sm:text-sm text-slate-400 mb-1">Roll {isOver ? "Over" : "Under"}</div>
+                  <div className="text-lg sm:text-xl font-bold text-white flex items-center justify-center">
                     {rollOver.toFixed(2)} <span className="ml-1 text-sm">🔄</span>
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-sm text-slate-400 mb-1">Win Chance</div>
-                  <div className="text-xl font-bold text-white flex items-center justify-center">
-                    {winChance.toFixed(4)} <span className="ml-1 text-lg">%</span>
+                <div className="text-center bg-slate-800 sm:bg-transparent p-3 sm:p-0 rounded-lg sm:rounded-none">
+                  <div className="text-xs sm:text-sm text-slate-400 mb-1">Win Chance</div>
+                  <div className="text-lg sm:text-xl font-bold text-white flex items-center justify-center">
+                    {winChance.toFixed(4)} <span className="ml-1 text-base sm:text-lg">%</span>
                   </div>
                 </div>
               </div>

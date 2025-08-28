@@ -393,28 +393,27 @@ export function JetXGame() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-blue-800/30 bg-black/20 backdrop-blur-sm">
-        <div className="flex items-center space-x-4">
-          <Button asChild variant="ghost" size="sm" className="text-white hover:bg-blue-800/30">
+      <div className="flex flex-col sm:flex-row items-center justify-between p-3 sm:p-4 lg:p-6 border-b border-blue-800/30 bg-black/20 backdrop-blur-sm gap-3 sm:gap-0">
+        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+          <Button asChild variant="ghost" size="sm" className="text-white hover:bg-blue-800/30 self-start">
             <Link href="/games">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Games
             </Link>
           </Button>
-          <div>
-            <div className="flex items-center space-x-3">
-              <h1 className="font-bold text-2xl md:text-3xl bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                <Plane className="inline h-8 w-8 mr-2 text-cyan-400" />
+          <div className="text-center sm:text-left">
+            <div className="flex items-center justify-center sm:justify-start space-x-2 sm:space-x-3">
+              <h1 className="font-bold text-xl sm:text-2xl md:text-3xl bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <Plane className="inline h-6 w-6 sm:h-8 sm:w-8 mr-2 text-cyan-400" />
                 Jet-X
               </h1>
-
             </div>
-            <p className="text-blue-200">Watch the jet soar and cash out before it crashes!</p>
+            <p className="text-blue-200 text-sm sm:text-base">Watch the jet soar and cash out before it crashes!</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <Badge variant="outline" className="px-3 py-1 border-cyan-400/50 text-cyan-300">
-            <TrendingUp className="h-4 w-4 mr-1" />
+          <Badge variant="outline" className="px-2 sm:px-3 py-1 border-cyan-400/50 text-cyan-300 text-xs sm:text-sm">
+            <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
             Crash Game
           </Badge>
           <Badge className="bg-yellow-500/90 text-black px-2 py-1 text-xs font-bold">
@@ -423,15 +422,15 @@ export function JetXGame() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-3 sm:p-4 lg:p-6">
         {/* Recent Crashes */}
-        <Card className="p-6 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 backdrop-blur-sm mb-6">
-          <h3 className="text-xl font-bold mb-4 text-cyan-300">🎯 Recent Crashes</h3>
-          <div className="flex flex-wrap gap-2">
+        <Card className="p-3 sm:p-4 lg:p-6 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 backdrop-blur-sm mb-4 sm:mb-6">
+          <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-cyan-300">🎯 Recent Crashes</h3>
+          <div className="flex flex-wrap gap-1 sm:gap-2 overflow-x-auto pb-2">
             {gameHistory.map((crash, index) => (
               <div
                 key={index}
-                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all hover:scale-105 ${
+                className={`px-2 sm:px-4 py-1 sm:py-2 rounded-lg text-xs sm:text-sm font-bold transition-all hover:scale-105 flex-shrink-0 ${
                   crash < 1.5
                     ? "bg-red-500/20 text-red-400 border border-red-500/30"
                     : crash < 3
@@ -447,7 +446,7 @@ export function JetXGame() {
           </div>
         </Card>
         {/* Game Canvas */}
-        <Card className="p-0 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 mb-6 overflow-hidden backdrop-blur-sm shadow-2xl shadow-cyan-500/20">
+        <Card className="p-0 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 mb-4 sm:mb-6 overflow-hidden backdrop-blur-sm shadow-2xl shadow-cyan-500/20">
           <div className="relative">
             {/* Demo Mode Overlay */}
 
@@ -455,7 +454,7 @@ export function JetXGame() {
               ref={canvasRef}
               width={800}
               height={400}
-              className="w-full h-80 md:h-96 rounded-lg"
+              className="w-full h-48 sm:h-64 md:h-80 lg:h-96 rounded-lg"
             />
 
             {/* Demo Crash Display */}
@@ -476,24 +475,24 @@ export function JetXGame() {
             )}
 
             {/* Multiplier Display */}
-            <div className="absolute top-6 left-6">
+            <div className="absolute top-3 sm:top-6 left-3 sm:left-6">
               {crashed ? (
                 <div className="text-center">
-                  <div className="text-4xl font-black text-red-500 animate-pulse mb-2">
+                  <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-red-500 animate-pulse mb-1 sm:mb-2">
                     CRASHED
                   </div>
-                  <div className="text-2xl text-red-400">
+                  <div className="text-lg sm:text-xl lg:text-2xl text-red-400">
                     at {crashPoint.current.toFixed(2)}x
                   </div>
                 </div>
               ) : (
                 <div className="text-center">
-                  <div className={`text-2xl font-black ${isPlaying ? "text-green-400 animate-pulse" : "text-white"} drop-shadow-lg font-mono`}>
+                  <div className={`text-xl sm:text-2xl font-black ${isPlaying ? "text-green-400 animate-pulse" : "text-white"} drop-shadow-lg font-mono`}>
                     {multiplier.toFixed(2)}x
                   </div>
                   {isPlaying && (
-                    <div className="text-cyan-300 text-lg animate-bounce">
-                      ${(bet * multiplier).toFixed(0)} potential win
+                    <div className="text-cyan-300 text-sm sm:text-base lg:text-lg animate-bounce">
+                      ₹{(bet * multiplier).toFixed(0)} potential win
                     </div>
                   )}
                 </div>
@@ -502,9 +501,9 @@ export function JetXGame() {
 
             {/* Speed Display */}
             {isPlaying && (
-              <div className="absolute top-6 right-6">
-                <div className="bg-black/50 backdrop-blur-sm rounded-lg px-4 py-2">
-                  <div className="text-cyan-400 text-sm font-bold">
+              <div className="absolute top-3 sm:top-6 right-3 sm:right-6">
+                <div className="bg-black/50 backdrop-blur-sm rounded-lg px-2 sm:px-4 py-1 sm:py-2">
+                  <div className="text-cyan-400 text-xs sm:text-sm font-bold">
                     🚀 Speed: {speed} km/h
                   </div>
                 </div>
@@ -514,16 +513,16 @@ export function JetXGame() {
             {/* Status Messages */}
             {cashedOut && (
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <div className="bg-emerald-500 text-white px-8 py-4 rounded-xl text-2xl font-bold animate-bounce shadow-2xl">
+                <div className="bg-emerald-500 text-white px-4 sm:px-8 py-2 sm:py-4 rounded-xl text-lg sm:text-2xl font-bold animate-bounce shadow-2xl">
                   🎉 Cashed Out at {cashOutMultiplier.toFixed(2)}x!
-                  <div className="text-lg">Won ${(bet * cashOutMultiplier).toFixed(0)}</div>
+                  <div className="text-sm sm:text-lg">Won ₹{(bet * cashOutMultiplier).toFixed(0)}</div>
                 </div>
               </div>
             )}
 
             {!isPlaying && !crashed && !showDemoCrash && (
-              <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
-                <div className="text-cyan-400 text-lg animate-pulse">
+              <div className="absolute bottom-3 sm:bottom-6 left-1/2 transform -translate-x-1/2">
+                <div className="text-cyan-400 text-sm sm:text-base lg:text-lg animate-pulse">
                   🎮 Ready for flight...
                 </div>
               </div>
@@ -532,60 +531,60 @@ export function JetXGame() {
         </Card>
 
         {/* Game Controls */}
-        <div className="grid lg:grid-cols-3 gap-6 mb-6">
-          <Card className="p-6 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 backdrop-blur-sm">
-            <h3 className="text-xl font-bold mb-4 text-cyan-300">💰 Place Bet</h3>
-            <div className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
+          <Card className="p-3 sm:p-4 lg:p-6 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 backdrop-blur-sm">
+            <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-cyan-300">💰 Place Bet</h3>
+            <div className="space-y-3 sm:space-y-4">
               <div>
-                <label className="block text-sm mb-2 text-gray-300">Bet Amount</label>
+                <label className="block text-xs sm:text-sm mb-2 text-gray-300">Bet Amount</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">₹</span>
                   <input
                     type="number"
                     value={bet}
                     onChange={(e) => setBet(Math.max(1, Number.parseInt(e.target.value) || 1))}
-                    className="w-full pl-8 pr-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-gray-500 focus:outline-none"
+                    className="w-full pl-8 pr-4 py-2 sm:py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-gray-500 focus:outline-none text-sm sm:text-base"
                     disabled={isPlaying}
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-4 gap-2">
-                <Button onClick={() => setBet(10)} disabled={isPlaying} variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">$10</Button>
-                <Button onClick={() => setBet(50)} disabled={isPlaying} variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">$50</Button>
-                <Button onClick={() => setBet((prev) => Math.max(1, prev / 2))} disabled={isPlaying} variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">1/2</Button>
-                <Button onClick={() => setBet((prev) => prev * 2)} disabled={isPlaying} variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">2x</Button>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <Button onClick={() => setBet(10)} disabled={isPlaying} variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white text-xs sm:text-sm touch-manipulation">₹10</Button>
+                <Button onClick={() => setBet(50)} disabled={isPlaying} variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white text-xs sm:text-sm touch-manipulation">₹50</Button>
+                <Button onClick={() => setBet((prev) => Math.max(1, prev / 2))} disabled={isPlaying} variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white text-xs sm:text-sm touch-manipulation">1/2</Button>
+                <Button onClick={() => setBet((prev) => prev * 2)} disabled={isPlaying} variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white text-xs sm:text-sm touch-manipulation">2x</Button>
               </div>
-              <div className="text-gray-400 bg-gray-800/50 p-3 rounded-lg">
-                <div className="flex justify-between">
+              <div className="text-gray-400 bg-gray-800/50 p-2 sm:p-3 rounded-lg">
+                <div className="flex justify-between text-sm sm:text-base">
                   <span>Balance:</span>
-                  <span className="font-bold text-emerald-400">${balance}</span>
+                  <span className="font-bold text-emerald-400">₹{balance}</span>
                 </div>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 backdrop-blur-sm">
-            <h3 className="text-xl font-bold mb-4 text-cyan-300">🎮 Game Controls</h3>
-            <div className="space-y-4">
+          <Card className="p-3 sm:p-4 lg:p-6 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 backdrop-blur-sm">
+            <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-cyan-300">🎮 Game Controls</h3>
+            <div className="space-y-3 sm:space-y-4">
               {!isPlaying ? (
                 <Button
                   onClick={startGame}
                   disabled={bet > balance}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-bold py-4 text-lg rounded-lg shadow-lg transform hover:scale-105 transition-all"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-bold py-3 sm:py-4 text-base sm:text-lg rounded-lg shadow-lg transform hover:scale-105 transition-all touch-manipulation"
                 >
-                  🚀 Start Flight (${bet})
+                  🚀 Start Flight (₹{bet})
                 </Button>
               ) : (
                 <Button
                   onClick={cashOut}
                   disabled={crashed || cashedOut}
-                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-4 text-lg rounded-lg shadow-lg animate-pulse"
+                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 sm:py-4 text-base sm:text-lg rounded-lg shadow-lg animate-pulse touch-manipulation"
                 >
                   💰 Cash Out ({multiplier.toFixed(2)}x)
                 </Button>
               )}
               <div>
-                <label className="block text-sm mb-2 text-gray-300">Auto Cash Out</label>
+                <label className="block text-xs sm:text-sm mb-2 text-gray-300">Auto Cash Out</label>
                 <div className="relative">
                   <input
                     type="number"
@@ -594,7 +593,7 @@ export function JetXGame() {
                     value={autoCashOut || ''}
                     onChange={(e) => setAutoCashOut(e.target.value ? parseFloat(e.target.value) : null)}
                     placeholder="e.g. 2.5"
-                    className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-gray-500 focus:outline-none"
+                    className="w-full px-3 sm:px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-gray-500 focus:outline-none text-sm sm:text-base"
                     disabled={isPlaying}
                   />
                   <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">x</span>
@@ -603,22 +602,22 @@ export function JetXGame() {
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 backdrop-blur-sm">
-            <h3 className="text-xl font-bold mb-4 text-cyan-300">📊 Statistics</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
+          <Card className="p-3 sm:p-4 lg:p-6 bg-gradient-to-br from-slate-800/50 to-blue-900/50 border-cyan-500/30 backdrop-blur-sm">
+            <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-cyan-300">📊 Statistics</h3>
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-gray-400">Games Played:</span>
                 <span className="text-white font-bold">{gameHistory.length}</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-gray-400">Highest Crash:</span>
                 <span className="text-emerald-400 font-bold">{mounted && gameHistory.length > 0 ? Math.max(...gameHistory).toFixed(2) : '0.00'}x</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-gray-400">Average Crash:</span>
                 <span className="text-blue-400 font-bold">{mounted && gameHistory.length > 0 ? (gameHistory.reduce((a, b) => a + b, 0) / gameHistory.length).toFixed(2) : '0.00'}x</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-gray-400">Current Streak:</span>
                 <span className="text-yellow-400 font-bold">3 wins</span>
               </div>

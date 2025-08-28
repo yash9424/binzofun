@@ -173,35 +173,35 @@ export function BalloonsGame() {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-slate-900 to-slate-800"></div>
       </div>
 
-      <div className="relative z-10 p-4">
-        <div className="flex items-center justify-between mb-6">
+      <div className="relative z-10 p-2 sm:p-4">
+        <div className="flex items-center justify-between mb-4 sm:mb-6 flex-wrap gap-2">
           <Button asChild variant="ghost" size="sm" className="hover:bg-slate-700 text-white">
             <Link href="/games">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Games
             </Link>
           </Button>
-          <div className="flex items-center space-x-4">
-            <Badge variant="outline" className="px-3 py-1 border-green-500/30 text-green-400">
-              <TrendingUp className="h-4 w-4 mr-1" />${balance.toFixed(2)}
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <Badge variant="outline" className="px-2 sm:px-3 py-1 border-green-500/30 text-green-400 text-sm">
+              <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />₹{balance.toFixed(2)}
             </Badge>
-            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white text-xs sm:text-sm">
               Fairness
             </Button>
           </div>
         </div>
 
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div className="lg:col-span-1">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="lg:col-span-1 order-2 lg:order-1">
               <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-                <CardContent className="p-6 space-y-6">
+                <CardContent className="p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 lg:space-y-6">
                   <div className="flex space-x-2">
                     <Button
                       variant={gameMode === "manual" ? "default" : "outline"}
                       size="sm"
                       onClick={() => setGameMode("manual")}
-                      className={`flex-1 ${gameMode === "manual" ? "bg-slate-600 text-white" : "bg-slate-700 text-slate-300 hover:text-white active:text-white border-slate-600 transition-colors"}`}
+                      className={`flex-1 text-xs sm:text-sm ${gameMode === "manual" ? "bg-slate-600 text-white" : "bg-slate-700 text-slate-300 hover:text-white active:text-white border-slate-600 transition-colors"}`}
                     >
                       Manual
                     </Button>
@@ -209,30 +209,30 @@ export function BalloonsGame() {
                       variant={gameMode === "auto" ? "default" : "outline"}
                       size="sm"
                       onClick={() => setGameMode("auto")}
-                      className={`flex-1 ${gameMode === "auto" ? "bg-slate-600 text-white" : "bg-slate-700 text-slate-300 hover:text-white active:text-white border-slate-600 transition-colors"}`}
+                      className={`flex-1 text-xs sm:text-sm ${gameMode === "auto" ? "bg-slate-600 text-white" : "bg-slate-700 text-slate-300 hover:text-white active:text-white border-slate-600 transition-colors"}`}
                     >
                       Auto
                     </Button>
                   </div>
 
                   <div>
-                    <label className="text-sm text-slate-400 mb-2 block">Bet Amount</label>
+                    <label className="text-xs sm:text-sm text-slate-400 mb-2 block">Bet Amount</label>
                     <input
                       type="number"
                       value={betAmount}
                       onChange={handleBetAmountChange}
                       step="1"
                       min="1"
-                      className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-3 text-center font-mono text-white text-lg focus:outline-none focus:border-slate-500"
+                      className="w-full bg-slate-700 border border-slate-600 rounded px-2 sm:px-3 py-2 sm:py-3 text-center font-mono text-white text-sm sm:text-lg focus:outline-none focus:border-slate-500"
                       placeholder="10"
                       disabled={gameActive}
                     />
-                    <div className="flex space-x-2 mt-3">
+                    <div className="flex space-x-1 sm:space-x-2 mt-2 sm:mt-3">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => adjustBetAmount(0.5)}
-                        className="flex-1 bg-slate-700 border-slate-600 text-slate-300 hover:text-white active:text-white transition-colors"
+                        className="flex-1 bg-slate-700 border-slate-600 text-slate-300 hover:text-white active:text-white transition-colors text-xs sm:text-sm"
                         disabled={gameActive}
                       >
                         ½
@@ -241,13 +241,13 @@ export function BalloonsGame() {
                         size="sm"
                         variant="outline"
                         onClick={() => adjustBetAmount(2)}
-                        className="flex-1 bg-slate-700 border-slate-600 text-slate-300 hover:text-white active:text-white transition-colors"
+                        className="flex-1 bg-slate-700 border-slate-600 text-slate-300 hover:text-white active:text-white transition-colors text-xs sm:text-sm"
                         disabled={gameActive}
                       >
                         2×
                       </Button>
                     </div>
-                    <div className="flex space-x-2 mt-2">
+                    <div className="flex space-x-1 sm:space-x-2 mt-2">
                       <Button
                         size="sm"
                         variant="outline"
@@ -255,7 +255,7 @@ export function BalloonsGame() {
                         className="flex-1 bg-slate-700 border-slate-600 text-slate-300 hover:text-white active:text-white transition-colors text-xs"
                         disabled={gameActive}
                       >
-                        $10
+                        ₹10
                       </Button>
                       <Button
                         size="sm"
@@ -264,7 +264,7 @@ export function BalloonsGame() {
                         className="flex-1 bg-slate-700 border-slate-600 text-slate-300 hover:text-white active:text-white transition-colors text-xs"
                         disabled={gameActive}
                       >
-                        $50
+                        ₹50
                       </Button>
                       <Button
                         size="sm"
@@ -273,18 +273,18 @@ export function BalloonsGame() {
                         className="flex-1 bg-slate-700 border-slate-600 text-slate-300 hover:text-white active:text-white transition-colors text-xs"
                         disabled={gameActive}
                       >
-                        $100
+                        ₹100
                       </Button>
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm text-slate-400 mb-2 block">Difficulty</label>
+                    <label className="text-xs sm:text-sm text-slate-400 mb-2 block">Difficulty</label>
                     <Select
                       value={difficulty}
                       onValueChange={(value: "easy" | "medium" | "hard") => setDifficulty(value)}
                     >
-                      <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                      <SelectTrigger className="bg-slate-700 border-slate-600 text-white text-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-slate-800 border-slate-600">
@@ -296,25 +296,25 @@ export function BalloonsGame() {
                   </div>
 
                   <div>
-                    <div className="text-sm text-slate-400 mb-3">
+                    <div className="text-xs sm:text-sm text-slate-400 mb-2 sm:mb-3">
                       Pump
                       {targetMultiplier && (
-                        <span className="ml-2 text-green-400 font-mono">Target: {targetMultiplier.toFixed(2)}x</span>
+                        <span className="ml-2 text-green-400 font-mono text-xs sm:text-sm">Target: {targetMultiplier.toFixed(2)}x</span>
                       )}
                     </div>
                     {!gameActive ? (
                       <Button
                         onClick={startGame}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 text-lg"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 sm:py-3 text-sm sm:text-lg"
                         disabled={balance < betAmount || betAmount <= 0}
                       >
-                        Bet ${betAmount.toFixed(0)}
+                        Bet ₹{betAmount.toFixed(0)}
                       </Button>
                     ) : (
                       <div className="space-y-2">
                         <Button
                           onClick={pump}
-                          className={`w-full font-semibold py-3 ${
+                          className={`w-full font-semibold py-2 sm:py-3 text-xs sm:text-sm ${
                             balloonPosition >= 90
                               ? "bg-red-600 hover:bg-red-700 animate-pulse"
                               : popChance > 0.3
@@ -337,17 +337,21 @@ export function BalloonsGame() {
                         </Button>
                         <Button
                           onClick={cashOut}
-                          className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2"
+                          className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 text-xs sm:text-sm"
                           disabled={balloonPopped || pumpCount === 0}
                         >
-                          Cash Out ${(betAmount * currentMultiplier).toFixed(2)}
+                          Cash Out ₹{(betAmount * currentMultiplier).toFixed(2)}
                         </Button>
                       </div>
                     )}
                     {gameActive && (
-                      <div className="mt-2 text-center text-sm text-slate-400">
-                        Pumps: {pumpCount} | Pop Risk: {(popChance * 100).toFixed(1)}% | Height:{" "}
-                        {balloonPosition.toFixed(0)}%
+                      <div className="mt-2 text-center text-xs sm:text-sm text-slate-400">
+                        <div className="sm:hidden">
+                          Pumps: {pumpCount} | Risk: {(popChance * 100).toFixed(1)}%
+                        </div>
+                        <div className="hidden sm:block">
+                          Pumps: {pumpCount} | Pop Risk: {(popChance * 100).toFixed(1)}% | Height: {balloonPosition.toFixed(0)}%
+                        </div>
                       </div>
                     )}
                   </div>
@@ -355,8 +359,8 @@ export function BalloonsGame() {
               </Card>
             </div>
 
-            <div className="lg:col-span-3">
-              <div className="flex justify-center space-x-2 mb-6 overflow-x-auto pb-2">
+            <div className="lg:col-span-3 order-1 lg:order-2">
+              <div className="flex justify-center space-x-1 sm:space-x-2 mb-4 sm:mb-6 overflow-x-auto pb-2">
                 {quickMultipliers.map((mult) => (
                   <Button
                     key={mult}
@@ -364,7 +368,7 @@ export function BalloonsGame() {
                     size="sm"
                     onClick={() => selectTargetMultiplier(mult)}
                     disabled={gameActive}
-                    className={`px-4 py-2 font-mono whitespace-nowrap transition-all cursor-pointer ${
+                    className={`px-2 sm:px-4 py-1 sm:py-2 font-mono whitespace-nowrap transition-all cursor-pointer text-xs sm:text-sm ${
                       targetMultiplier === mult
                         ? "bg-green-600 text-white border-green-500 shadow-lg"
                         : currentMultiplier >= mult
@@ -378,12 +382,12 @@ export function BalloonsGame() {
               </div>
 
               {!gameActive && (
-                <div className="text-center text-slate-400 text-sm mb-4">
+                <div className="text-center text-slate-400 text-xs sm:text-sm mb-3 sm:mb-4">
                   Click a multiplier above to set your target cash-out point
                 </div>
               )}
 
-              <div className="relative h-96 bg-slate-800/30 rounded-xl border border-slate-700 overflow-hidden">
+              <div className="relative h-64 sm:h-80 lg:h-96 bg-slate-800/30 rounded-xl border border-slate-700 overflow-hidden">
                 <div className="absolute inset-0 flex items-end justify-center pb-8">
                   <div
                     className="relative transition-all duration-500 ease-out"
@@ -396,8 +400,8 @@ export function BalloonsGame() {
                         balloonPopped ? "bg-red-500 animate-bounce" : "bg-red-500"
                       }`}
                       style={{
-                        width: `${balloonSize}px`,
-                        height: `${balloonSize * 1.2}px`,
+                        width: `${Math.min(balloonSize, window.innerWidth * 0.3)}px`,
+                        height: `${Math.min(balloonSize * 1.2, window.innerWidth * 0.36)}px`,
                         borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
                         fontSize: `${Math.min(balloonSize / 5, 24)}px`,
                         boxShadow: balloonPopped
@@ -422,18 +426,18 @@ export function BalloonsGame() {
                     >
                       <div className="text-center text-white">
                         <div
-                          className={`text-4xl font-bold mb-4 ${
+                          className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4 ${
                             gameResult === "win" ? "text-green-400" : "text-red-400"
                           }`}
                         >
                           {gameResult === "win" ? "🎉 WIN!" : "💥 POPPED!"}
                         </div>
-                        <div className="text-xl">
+                        <div className="text-lg sm:text-xl">
                           {gameResult === "win"
-                            ? `Won $${(betAmount * currentMultiplier).toFixed(2)}`
-                            : `Lost $${betAmount.toFixed(0)}`}
+                            ? `Won ₹${(betAmount * currentMultiplier).toFixed(2)}`
+                            : `Lost ₹${betAmount.toFixed(0)}`}
                         </div>
-                        <div className="text-lg text-slate-300 mt-2">Multiplier: {currentMultiplier.toFixed(2)}x</div>
+                        <div className="text-sm sm:text-lg text-slate-300 mt-2">Multiplier: {currentMultiplier.toFixed(2)}x</div>
                       </div>
                     </div>
                   )}
