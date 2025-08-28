@@ -16,7 +16,7 @@ export function AviatorGame() {
   const [hasBet2, setHasBet2] = useState(false)
   const [cashedOut1, setCashedOut1] = useState(false)
   const [cashedOut2, setCashedOut2] = useState(false)
-  const [planePosition, setPlanePosition] = useState({ x: 5, y: 80 })
+  const [planePosition, setPlanePosition] = useState({ x: 0, y: 75 })
   const [countdown, setCountdown] = useState(5)
   const [multiplierHistory, setMultiplierHistory] = useState([7.20, 1.19, 1.76, 1.87, 3.54, 1.31, 3.76, 1.07, 1.01, 1.16, 1.19, 1.26, 1.51, 1.18, 1.20, 18.74, 8.86, 3.49, 5.52, 2.59, 1.11, 17.1])
   const intervalRef = useRef<NodeJS.Timeout>()
@@ -36,7 +36,7 @@ export function AviatorGame() {
     setCashedOut1(false) 
     setCashedOut2(false)
     setCurrentMultiplier(1.0)
-    setPlanePosition({ x: 5, y: 80 })
+    setPlanePosition({ x: 0, y:  75})
     
     countdownRef.current = setInterval(() => {
       setCountdown((prev) => {
@@ -94,8 +94,8 @@ export function AviatorGame() {
         setPlanePosition(() => {
           const progress = Math.min((next - 1.0) / 10, 1)
           return {
-            x: Math.min(85, 5 + progress * 80),
-            y: Math.max(15, 80 - progress * 65)
+            x: Math.min(85, progress * 85),
+            y: Math.max(10, 75 - progress * 65)
           }
         })
 
@@ -176,7 +176,7 @@ export function AviatorGame() {
       </div>
 
       {/* Game Canvas */}
-      <div className="bg-gradient-to-br from-blue-900 to-purple-900 rounded-lg p-8 mb-6 min-h-[400px] relative overflow-hidden">
+      <div className="bg-gradient-to-br from-blue-900 to-purple-900 rounded-lg p-8 mb-6 min-h-[500px] relative overflow-hidden">
         {/* Multiplier Display */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
@@ -243,7 +243,7 @@ export function AviatorGame() {
                 value={betAmount1.toFixed(2)}
                 onChange={(e) => setBetAmount1(Math.max(0.01, parseFloat(e.target.value) || 0.01))}
                 disabled={hasBet1}
-                className="w-20 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-white font-bold disabled:opacity-50"
+                className="w-28 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-white font-bold disabled:opacity-50"
                 min="0.01"
                 step="0.01"
               />
@@ -255,6 +255,24 @@ export function AviatorGame() {
                 +
               </button>
             </div>
+          </div>
+          
+          {/* Quick Bet Buttons for Bet 1 */}
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-1 mb-3">
+            {[10, 50, 100, 500, 1000].map((amount) => (
+              <button
+                key={amount}
+                onClick={() => setBetAmount1(amount)}
+                disabled={hasBet1}
+                className={`px-2 py-1 text-xs rounded font-medium transition-colors ${
+                  betAmount1 === amount 
+                    ? "bg-red-600 hover:bg-red-700 text-white" 
+                    : "bg-gray-700 hover:bg-gray-600 text-white"
+                } disabled:bg-gray-600 disabled:opacity-50`}
+              >
+                ₹{amount}
+              </button>
+            ))}
           </div>
           
           {!hasBet1 ? (
@@ -300,7 +318,7 @@ export function AviatorGame() {
                 value={betAmount2.toFixed(2)}
                 onChange={(e) => setBetAmount2(Math.max(0.01, parseFloat(e.target.value) || 0.01))}
                 disabled={hasBet2}
-                className="w-20 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-white font-bold disabled:opacity-50"
+                className="w-28 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-white font-bold disabled:opacity-50"
                 min="0.01"
                 step="0.01"
               />
@@ -312,6 +330,24 @@ export function AviatorGame() {
                 +
               </button>
             </div>
+          </div>
+          
+          {/* Quick Bet Buttons for Bet 2 */}
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-1 mb-3">
+            {[10, 50, 100, 500, 1000].map((amount) => (
+              <button
+                key={amount}
+                onClick={() => setBetAmount2(amount)}
+                disabled={hasBet2}
+                className={`px-2 py-1 text-xs rounded font-medium transition-colors ${
+                  betAmount2 === amount 
+                    ? "bg-red-600 hover:bg-red-700 text-white" 
+                    : "bg-gray-700 hover:bg-gray-600 text-white"
+                } disabled:bg-gray-600 disabled:opacity-50`}
+              >
+                ₹{amount}
+              </button>
+            ))}
           </div>
           
           {!hasBet2 ? (
