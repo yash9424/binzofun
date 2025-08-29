@@ -494,10 +494,10 @@ export function BalloonsGame() {
                         <div
                           className="rounded-full transition-all duration-200 ease-out flex items-center justify-center text-white font-bold shadow-2xl bg-red-500 animate-pulse"
                           style={{
-                            width: `${Math.min(balloonSize, typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.3, 180) : 120)}px`,
-                            height: `${Math.min(balloonSize * 1.2, typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.36, 216) : 144)}px`,
+                            width: `${Math.min(balloonSize, typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.4, 200) : 140)}px`,
+                            height: `${Math.min(balloonSize * 1.2, typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.48, 240) : 168)}px`,
                             borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
-                            fontSize: `${Math.min(balloonSize / 6, typeof window !== 'undefined' && window.innerWidth < 640 ? 14 : 18)}px`,
+                            fontSize: `${Math.min(balloonSize / 6, typeof window !== 'undefined' && window.innerWidth < 640 ? 16 : 20)}px`,
                             boxShadow: "0 0 20px rgba(239, 68, 68, 0.6)",
                           }}
                         >
@@ -510,27 +510,27 @@ export function BalloonsGame() {
                         </div>
                       </>
                     ) : (
-                      <div className="relative flex items-center justify-center" style={{width: `${Math.min(balloonSize, typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.4, 200) : 150)}px`, height: `${Math.min(balloonSize, typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.4, 200) : 150)}px`}}>
+                      <div className="relative flex items-center justify-center" style={{width: `${Math.min(balloonSize, typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.5, 250) : 180)}px`, height: `${Math.min(balloonSize, typeof window !== 'undefined' ? Math.min(window.innerWidth * 0.5, 250) : 180)}px`}}>
                         {/* Blast Effect - Always show when balloon is popped */}
                         <div className="absolute inset-0 flex items-center justify-center">
                           <div className="relative">
                             {/* Shockwave rings - responsive sizes */}
-                            <div className="absolute rounded-full border-2 sm:border-4 border-red-400 animate-ping" style={{width: typeof window !== 'undefined' && window.innerWidth < 640 ? '80px' : '120px', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '80px' : '120px', left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-40px' : '-60px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-40px' : '-60px'}} />
-                            <div className="absolute rounded-full border-2 border-orange-400 animate-ping animation-delay-100" style={{width: typeof window !== 'undefined' && window.innerWidth < 640 ? '100px' : '160px', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '100px' : '160px', left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-50px' : '-80px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-50px' : '-80px'}} />
-                            <div className="absolute rounded-full border-2 border-yellow-400 animate-ping animation-delay-200" style={{width: typeof window !== 'undefined' && window.innerWidth < 640 ? '120px' : '200px', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '120px' : '200px', left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-60px' : '-100px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-60px' : '-100px'}} />
+                            <div className="absolute rounded-full border-4 sm:border-4 border-red-400 animate-ping" style={{width: typeof window !== 'undefined' && window.innerWidth < 640 ? '100px' : '120px', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '100px' : '120px', left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-50px' : '-60px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-50px' : '-60px'}} />
+                            <div className="absolute rounded-full border-3 border-orange-400 animate-ping animation-delay-100" style={{width: typeof window !== 'undefined' && window.innerWidth < 640 ? '130px' : '160px', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '130px' : '160px', left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-65px' : '-80px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-65px' : '-80px'}} />
+                            <div className="absolute rounded-full border-2 border-yellow-400 animate-ping animation-delay-200" style={{width: typeof window !== 'undefined' && window.innerWidth < 640 ? '160px' : '200px', height: typeof window !== 'undefined' && window.innerWidth < 640 ? '160px' : '200px', left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-80px' : '-100px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-80px' : '-100px'}} />
                             
                             {/* Central explosion - responsive size */}
-                            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-radial from-white via-yellow-400 to-red-600 rounded-full animate-pulse" style={{marginLeft: typeof window !== 'undefined' && window.innerWidth < 640 ? '-24px' : '-32px', marginTop: typeof window !== 'undefined' && window.innerWidth < 640 ? '-24px' : '-32px'}} />
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-radial from-white via-yellow-400 to-red-600 rounded-full animate-pulse" style={{marginLeft: typeof window !== 'undefined' && window.innerWidth < 640 ? '-32px' : '-40px', marginTop: typeof window !== 'undefined' && window.innerWidth < 640 ? '-32px' : '-40px'}} />
                             
                             {/* Smoke clouds - responsive sizes */}
-                            <div className="absolute w-16 h-16 sm:w-20 sm:h-20 bg-gray-600 rounded-full opacity-60 animate-ping" style={{left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-32px' : '-40px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-32px' : '-40px', animationDelay: '0.2s'}} />
-                            <div className="absolute w-20 h-20 sm:w-24 sm:h-24 bg-gray-500 rounded-full opacity-40 animate-ping" style={{left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-40px' : '-48px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-40px' : '-48px', animationDelay: '0.4s'}} />
+                            <div className="absolute w-20 h-20 sm:w-24 sm:h-24 bg-gray-600 rounded-full opacity-60 animate-ping" style={{left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-40px' : '-48px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-40px' : '-48px', animationDelay: '0.2s'}} />
+                            <div className="absolute w-24 h-24 sm:w-28 sm:h-28 bg-gray-500 rounded-full opacity-40 animate-ping" style={{left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-48px' : '-56px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-48px' : '-56px', animationDelay: '0.4s'}} />
                             
                             {/* Flash effect - responsive size */}
-                            <div className="absolute w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-full opacity-80 animate-ping" style={{left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-48px' : '-64px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-48px' : '-64px', animationDuration: '0.3s'}} />
+                            <div className="absolute w-28 h-28 sm:w-36 sm:h-36 bg-white rounded-full opacity-80 animate-ping" style={{left: typeof window !== 'undefined' && window.innerWidth < 640 ? '-56px' : '-72px', top: typeof window !== 'undefined' && window.innerWidth < 640 ? '-56px' : '-72px', animationDuration: '0.3s'}} />
                             
                             {/* Explosion text - responsive size */}
-                            <div className="absolute inset-0 flex items-center justify-center text-4xl sm:text-6xl animate-bounce">
+                            <div className="absolute inset-0 flex items-center justify-center text-5xl sm:text-7xl animate-bounce">
                               💥
                             </div>
                             
