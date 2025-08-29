@@ -271,7 +271,7 @@ export function PlinkoGame() {
       </div>
 
       <div className="flex flex-col lg:flex-row h-[calc(100vh-80px)]">
-        <div className="w-full lg:w-80 bg-slate-800 p-3 lg:p-6 space-y-3 lg:space-y-6 order-2 lg:order-1">
+        <div className="w-full lg:w-80 bg-slate-800 p-2 lg:p-6 space-y-2 lg:space-y-6 order-2 lg:order-1">
           {/* Manual/Auto Toggle */}
           <div className="flex bg-slate-700 rounded-lg p-1">
             <button
@@ -375,8 +375,8 @@ export function PlinkoGame() {
           </div>
         </div>
 
-        <div className="flex-1 p-2 lg:p-6 order-1 lg:order-2">
-          <div className="relative bg-slate-800 rounded-lg h-80 sm:h-96 md:h-[500px] lg:h-full overflow-hidden">
+        <div className="flex-1 p-0 lg:p-6 order-1 lg:order-2">
+          <div className="relative bg-slate-800 rounded-none lg:rounded-lg h-80 sm:h-96 md:h-[500px] lg:h-full overflow-hidden">
             {/* Ball trails */}
             {balls.map((ball) =>
               ball.trail.map((point, index) => (
