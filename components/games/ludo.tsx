@@ -76,8 +76,8 @@ export default function LudoGame() {
       Blue: [{r:7,c:13}, {r:7,c:12}, {r:7,c:11}, {r:7,c:10}, {r:7,c:9}]
     }
     
-    // Starting positions on circuit
-    const startIndices = { Green: 0, Yellow: 13, Red: 43, Blue: 28 }
+    // Starting positions on circuit (adjusted for each player)
+    const startIndices = { Green: 0, Yellow: 12, Red: 36, Blue: 24 }
     const startIndex = startIndices[player as keyof typeof startIndices]
     
     // Build complete path: 52 circuit squares + 5 home stretch = 57 total
@@ -177,7 +177,7 @@ export default function LudoGame() {
         setGameStatus(`${nextPlayer}'s turn`)
         setCanRoll(true)
         setSelectedToken(null)
-      }, 2000)
+      }, 500)
     } else {
       setGameStatus(`${currentPlayer} rolled ${value} - Select a token to move`)
       setTimeout(() => setCanRoll(false), 1000)
@@ -188,7 +188,7 @@ export default function LudoGame() {
     audio.volume = 0.4
     audio.play().catch(() => {})
     
-    setTimeout(() => setIsAnimating(false), 800)
+    setTimeout(() => setIsAnimating(false), 200)
     
     // AI player logic
     if (gameMode === 'ai' && currentPlayer !== 'Green') {
@@ -334,13 +334,28 @@ export default function LudoGame() {
         if (currentPathIndex !== -1) {
           let newPathIndex = currentPathIndex + diceValue
           
+          // Circuit length is 48 after removing blocked positions
+          const circuitLength = 48
+          
+          // Check if token is at home entry point for their color
+          const homeEntryPoints = {
+            Green: circuitLength - 1, // Last position before home stretch
+            Yellow: circuitLength - 1,
+            Blue: circuitLength - 1, 
+            Red: circuitLength - 1
+          }
+          
+          const homeEntryPoint = homeEntryPoints[currentPlayer as keyof typeof homeEntryPoints]
+          
           if (newPathIndex >= playerPath.length) {
             // Token reaches center (winning position)
             newR = 7; newC = 7
             setTokensInHome(prev => ({ ...prev, [currentPlayer]: prev[currentPlayer as keyof typeof prev] + 1 }))
-          } else {
+          } else if (newPathIndex < playerPath.length) {
             const newPos = playerPath[newPathIndex]
-            newR = newPos.r; newC = newPos.c
+            if (newPos) {
+              newR = newPos.r; newC = newPos.c
+            }
           }
         }
         
@@ -465,9 +480,9 @@ export default function LudoGame() {
           setCurrentPlayer(nextPlayer)
           setGameStatus(`${nextPlayer}'s turn`)
           setCanRoll(true)
-        }, 1000)
+        }, 300)
       }
-    }, 1000)
+    }, 300)
   }
   
   const resetGame = () => {
