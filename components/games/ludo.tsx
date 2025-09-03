@@ -817,22 +817,7 @@ export default function LudoGame() {
     drawStartArrow(6 * cell, 13 * cell, '#B22222', -Math.PI/2)
     drawStartArrow(13 * cell, 8 * cell, '#4169E1', Math.PI)
     
-    // Draw connections from home to start positions
-    const drawConnection = (homeR: number, homeC: number, startR: number, startC: number, color: string) => {
-      ctx.strokeStyle = color + '60'
-      ctx.lineWidth = 2
-      ctx.setLineDash([3, 3])
-      ctx.beginPath()
-      ctx.moveTo(homeC * cell + cell/2, homeR * cell + cell/2)
-      ctx.lineTo(startC * cell + cell/2, startR * cell + cell/2)
-      ctx.stroke()
-      ctx.setLineDash([])
-    }
-    
-    drawConnection(2.5, 2.5, 6, 1, '#228B22') // Green to (6,1) - index 0
-    drawConnection(2.5, 11.5, 1, 8, '#DAA520') // Yellow to (1,8) - index 13
-    drawConnection(11.5, 2.5, 13, 6, '#B22222') // Red to (13,6) - matches arrow
-    drawConnection(11.5, 11.5, 8, 13, '#4169E1') // Blue to (8,13) - matches arrow
+
 
     // Enhanced safe zones with glow effect
     const drawSafeZone = (x: number, y: number) => {
@@ -870,21 +855,35 @@ export default function LudoGame() {
     drawSafeZone(8 * cell, 12 * cell) // Red safe zone
     drawSafeZone(12 * cell, 6 * cell) // Blue safe zone
 
-    // Enhanced center home with 3D effect
+    // Redesigned elegant center home base
     const centerX = 6 * cell, centerY = 6 * cell, centerSize = 3 * cell
+    const cx = centerX + centerSize/2, cy = centerY + centerSize/2
     
-    // Center shadow
-    ctx.shadowColor = 'rgba(0,0,0,0.3)'
-    ctx.shadowBlur = 10
-    ctx.shadowOffsetX = 4
-    ctx.shadowOffsetY = 4
+    // Outer golden ring with shadow
+    ctx.shadowColor = 'rgba(0,0,0,0.4)'
+    ctx.shadowBlur = 15
+    ctx.shadowOffsetX = 5
+    ctx.shadowOffsetY = 5
     
-    // Center background with gradient
-    const centerGradient = ctx.createLinearGradient(centerX, centerY, centerX + centerSize, centerY + centerSize)
-    centerGradient.addColorStop(0, '#FFFFFF')
-    centerGradient.addColorStop(1, '#F0F0F0')
-    ctx.fillStyle = centerGradient
-    ctx.fillRect(centerX, centerY, centerSize, centerSize)
+    const outerRing = ctx.createRadialGradient(cx, cy, centerSize/2 - 10, cx, cy, centerSize/2)
+    outerRing.addColorStop(0, '#FFD700')
+    outerRing.addColorStop(0.7, '#FFA500')
+    outerRing.addColorStop(1, '#FF8C00')
+    ctx.fillStyle = outerRing
+    ctx.beginPath()
+    ctx.arc(cx, cy, centerSize/2, 0, 2 * Math.PI)
+    ctx.fill()
+    
+    // Inner elegant base
+    const innerGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, centerSize/2 - 15)
+    innerGradient.addColorStop(0, '#FFFFFF')
+    innerGradient.addColorStop(0.3, '#F8F8FF')
+    innerGradient.addColorStop(0.7, '#E6E6FA')
+    innerGradient.addColorStop(1, '#D3D3D3')
+    ctx.fillStyle = innerGradient
+    ctx.beginPath()
+    ctx.arc(cx, cy, centerSize/2 - 15, 0, 2 * Math.PI)
+    ctx.fill()
     
     // Reset shadow
     ctx.shadowColor = 'transparent'
@@ -892,37 +891,60 @@ export default function LudoGame() {
     ctx.shadowOffsetX = 0
     ctx.shadowOffsetY = 0
     
-    // Center border
-    ctx.strokeStyle = '#333'
+    // Decorative border rings
+    ctx.strokeStyle = '#DAA520'
     ctx.lineWidth = 3
-    ctx.strokeRect(centerX, centerY, centerSize, centerSize)
+    ctx.beginPath()
+    ctx.arc(cx, cy, centerSize/2 - 5, 0, 2 * Math.PI)
+    ctx.stroke()
     
-    // Enhanced center triangles with gradients
-    const cx = 7.5 * cell, cy = 7.5 * cell, ts = cell * 0.8
-    const triangles = [
-      {color: '#2E8B57', points: [[cx,cy-ts],[cx-ts,cy],[cx+ts,cy]]},
-      {color: '#DAA520', points: [[cx+ts,cy],[cx,cy-ts],[cx,cy+ts]]},
-      {color: '#B22222', points: [[cx,cy+ts],[cx-ts,cy],[cx+ts,cy]]},
-      {color: '#4169E1', points: [[cx-ts,cy],[cx,cy-ts],[cx,cy+ts]]}
+    ctx.strokeStyle = '#B8860B'
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    ctx.arc(cx, cy, centerSize/2 - 20, 0, 2 * Math.PI)
+    ctx.stroke()
+    
+    // Elegant center crown/trophy design
+    ctx.fillStyle = '#FFD700'
+    ctx.font = 'bold 32px Arial'
+    ctx.textAlign = 'center'
+    ctx.shadowColor = 'rgba(0,0,0,0.3)'
+    ctx.shadowBlur = 3
+    ctx.fillText('👑', cx, cy - 5)
+    
+    // Victory text
+    ctx.fillStyle = '#8B4513'
+    ctx.font = 'bold 12px Arial'
+    ctx.shadowColor = 'rgba(0,0,0,0.2)'
+    ctx.shadowBlur = 2
+    ctx.fillText('VICTORY', cx, cy + 25)
+    
+    // Decorative corner elements
+    const cornerSize = 8
+    const corners = [
+      {x: centerX + 10, y: centerY + 10},
+      {x: centerX + centerSize - 10, y: centerY + 10},
+      {x: centerX + 10, y: centerY + centerSize - 10},
+      {x: centerX + centerSize - 10, y: centerY + centerSize - 10}
     ]
     
-    triangles.forEach(({color, points}) => {
-      // Triangle gradient
-      const triGradient = ctx.createLinearGradient(points[0][0], points[0][1], points[1][0], points[1][1])
-      triGradient.addColorStop(0, color)
-      triGradient.addColorStop(1, adjustBrightness(color, -40))
-      
-      ctx.fillStyle = triGradient
+    corners.forEach(corner => {
+      const cornerGradient = ctx.createRadialGradient(corner.x, corner.y, 0, corner.x, corner.y, cornerSize)
+      cornerGradient.addColorStop(0, '#FFD700')
+      cornerGradient.addColorStop(1, '#FFA500')
+      ctx.fillStyle = cornerGradient
       ctx.beginPath()
-      ctx.moveTo(points[0][0], points[0][1])
-      points.slice(1).forEach(([x,y]) => ctx.lineTo(x, y))
-      ctx.closePath()
+      ctx.arc(corner.x, corner.y, cornerSize, 0, 2 * Math.PI)
       ctx.fill()
       
-      ctx.strokeStyle = '#222'
-      ctx.lineWidth = 2
+      ctx.strokeStyle = '#B8860B'
+      ctx.lineWidth = 1
       ctx.stroke()
     })
+    
+    // Reset all effects
+    ctx.shadowColor = 'transparent'
+    ctx.shadowBlur = 0
     
     // Add index numbers to home stretch paths
     const homeStretchPositions = [
