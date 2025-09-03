@@ -57,6 +57,7 @@ export default function LudoGame() {
   const [lightingEffects, setLightingEffects] = useState(true)
   const [cinematicMode, setCinematicMode] = useState(false)
   const [animationFrame, setAnimationFrame] = useState(0)
+  const [animatingToken, setAnimatingToken] = useState<{player: string, tokenIndex: number, path: {r: number, c: number}[], currentStep: number} | null>(null)
   
   // Define correct Ludo paths with proper connections
   const getPlayerPath = (player: string) => {
@@ -298,174 +299,149 @@ export default function LudoGame() {
   const moveToken = (tokenIndex: number) => {
     setMoveCount(prev => prev + 1)
     setGameStatus(`Moving token ${tokenIndex + 1}...`)
+    setIsAnimating(true)
     
-    let capturedOpponent = false
+    const token = tokenPositions[currentPlayer as keyof typeof tokenPositions][tokenIndex]
     
-    // Proper path-based movement
-    setTokenPositions(prev => {
-      const newPositions = { ...prev }
-      const currentTokens = [...newPositions[currentPlayer as keyof typeof newPositions]]
-      const token = currentTokens[tokenIndex]
+    // Check if token is in home area
+    const isInHome = (currentPlayer === 'Green' && token.r >= 1 && token.r <= 4 && token.c >= 1 && token.c <= 4) ||
+                    (currentPlayer === 'Yellow' && token.r >= 1 && token.r <= 4 && token.c >= 10 && token.c <= 13) ||
+                    (currentPlayer === 'Red' && token.r >= 10 && token.r <= 13 && token.c >= 1 && token.c <= 4) ||
+                    (currentPlayer === 'Blue' && token.r >= 10 && token.r <= 13 && token.c >= 10 && token.c <= 13)
+    
+    let movementPath: {r: number, c: number}[] = []
+    
+    if (isInHome && diceValue === 6) {
+      // Move to starting position
+      const startPositions = {
+        Green: {r: 6, c: 1},
+        Yellow: {r: 1, c: 8},
+        Red: {r: 13, c: 6},
+        Blue: {r: 8, c: 13}
+      }
+      movementPath = [startPositions[currentPlayer as keyof typeof startPositions]]
+    } else if (!isInHome) {
+      // Calculate path for movement
+      const playerPath = getPlayerPath(currentPlayer)
+      const currentPathIndex = getTokenPathPosition(currentPlayer, token)
       
-      // Check if token is in home area (can only move out with 6)
-      const isInHome = (currentPlayer === 'Green' && token.r >= 1 && token.r <= 4 && token.c >= 1 && token.c <= 4) ||
-                      (currentPlayer === 'Yellow' && token.r >= 1 && token.r <= 4 && token.c >= 10 && token.c <= 13) ||
-                      (currentPlayer === 'Red' && token.r >= 10 && token.r <= 13 && token.c >= 1 && token.c <= 4) ||
-                      (currentPlayer === 'Blue' && token.r >= 10 && token.r <= 13 && token.c >= 10 && token.c <= 13)
-      
-      let newR = token.r
-      let newC = token.c
-      
-      if (isInHome && diceValue === 6) {
-        // Move to correct starting position on circuit
-        const startPositions = {
-          Green: {r: 6, c: 1},
-          Yellow: {r: 1, c: 8},
-          Red: {r: 13, c: 6},
-          Blue: {r: 8, c: 13}
-        }
-        const startPos = startPositions[currentPlayer as keyof typeof startPositions]
-        newR = startPos.r
-        newC = startPos.c
-      } else if (!isInHome) {
-        const playerPath = getPlayerPath(currentPlayer)
-        const currentPathIndex = getTokenPathPosition(currentPlayer, token)
-        
-        if (currentPathIndex !== -1) {
-          let newPathIndex = currentPathIndex + diceValue
-          
-          // Circuit length is 48 after removing blocked positions
-          const circuitLength = 48
-          
-          // Check if token is at home entry point for their color
-          const homeEntryPoints = {
-            Green: circuitLength - 1, // Last position before home stretch
-            Yellow: circuitLength - 1,
-            Blue: circuitLength - 1, 
-            Red: circuitLength - 1
-          }
-          
-          const homeEntryPoint = homeEntryPoints[currentPlayer as keyof typeof homeEntryPoints]
-          
+      if (currentPathIndex !== -1) {
+        for (let i = 1; i <= diceValue; i++) {
+          const newPathIndex = currentPathIndex + i
           if (newPathIndex >= playerPath.length) {
-            // Token reaches center (winning position)
-            newR = 7; newC = 7
-            setTokensInHome(prev => ({ ...prev, [currentPlayer]: prev[currentPlayer as keyof typeof prev] + 1 }))
+            movementPath.push({r: 7, c: 7}) // Center
+            break
           } else if (newPathIndex < playerPath.length) {
             const newPos = playerPath[newPathIndex]
             if (newPos) {
-              newR = newPos.r; newC = newPos.c
+              movementPath.push(newPos)
             }
           }
         }
-        
-        // Check for captures (not in safe zones or home stretch)
-        const safeZones = [{r:6,c:2}, {r:2,c:8}, {r:8,c:12}, {r:12,c:6}]
-        const isInSafeZone = safeZones.some(safe => safe.r === newR && safe.c === newC)
-        const isInHomeStretch = currentPathIndex >= 52
-        
-        if (!isInHomeStretch && !isInSafeZone && newR !== 7 && newC !== 7) {
-          Object.entries(newPositions).forEach(([otherPlayer, otherTokens]) => {
-            if (otherPlayer !== currentPlayer) {
-              otherTokens.forEach((otherToken, otherIndex) => {
-                if (otherToken.r === newR && otherToken.c === newC) {
-                  // Send opponent token back to home
-                  const homePositions = {
-                    Green: [{r:2,c:2}, {r:2,c:4}, {r:4,c:2}, {r:4,c:4}],
-                    Yellow: [{r:2,c:11}, {r:2,c:13}, {r:4,c:11}, {r:4,c:13}],
-                    Red: [{r:11,c:2}, {r:11,c:4}, {r:13,c:2}, {r:13,c:4}],
-                    Blue: [{r:11,c:11}, {r:11,c:13}, {r:13,c:11}, {r:13,c:13}]
-                  }
-                  const playerHomes = homePositions[otherPlayer as keyof typeof homePositions]
-                  const emptyHome = playerHomes.find(pos => 
-                    !otherTokens.some(t => t.r === pos.r && t.c === pos.c)
-                  )
-                  if (emptyHome) {
-                    newPositions[otherPlayer as keyof typeof newPositions][otherIndex] = emptyHome
-                    setLastCapture(`${currentPlayer} captured ${otherPlayer}'s token!`)
-                    setGameHistory(prev => [...prev, `${currentPlayer} captured ${otherPlayer}'s token!`])
-                    capturedOpponent = true
-                    
-                    // Create capture particles
-                    if (lightingEffects) {
-                      const cell = 600 / 15
-                      createParticles(newC * cell + cell/2, newR * cell + cell/2, '#ff4444', 20)
-                    }
-                    
-                    // Capture sound effect
-                    const captureAudio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT')
-                    captureAudio.volume = 0.6
-                    captureAudio.play().catch(() => {})
-                  }
-                }
-              })
-            }
-          })
-        }
       }
+    }
+    
+    if (movementPath.length > 0) {
+      setAnimatingToken({
+        player: currentPlayer,
+        tokenIndex,
+        path: movementPath,
+        currentStep: 0
+      })
       
-      currentTokens[tokenIndex] = { r: newR, c: newC }
+      // Start step-by-step animation
+      animateTokenMovement(tokenIndex, movementPath, 0)
+    } else {
+      setIsAnimating(false)
+    }
+  }
+  
+  const animateTokenMovement = (tokenIndex: number, path: {r: number, c: number}[], step: number) => {
+    if (step >= path.length) {
+      // Animation complete
+      setAnimatingToken(null)
+      setIsAnimating(false)
+      completeTokenMove(tokenIndex, path[path.length - 1])
+      return
+    }
+    
+    // Move to next step
+    setTokenPositions(prev => {
+      const newPositions = { ...prev }
+      const currentTokens = [...newPositions[currentPlayer as keyof typeof newPositions]]
+      currentTokens[tokenIndex] = path[step]
       newPositions[currentPlayer as keyof typeof newPositions] = currentTokens
-      
       return newPositions
     })
+    
+    // Continue to next step after delay
+    setTimeout(() => {
+      animateTokenMovement(tokenIndex, path, step + 1)
+    }, 200)
+  }
+  
+  const completeTokenMove = (tokenIndex: number, finalPosition: {r: number, c: number}) => {
+    let capturedOpponent = false
+    
+    // Check for captures and handle game logic
+    const safeZones = [{r:6,c:2}, {r:2,c:8}, {r:8,c:12}, {r:12,c:6}]
+    const isInSafeZone = safeZones.some(safe => safe.r === finalPosition.r && safe.c === finalPosition.c)
+    const isCenter = finalPosition.r === 7 && finalPosition.c === 7
+    
+    if (!isCenter && !isInSafeZone) {
+      // Check for captures
+      setTokenPositions(prev => {
+        const newPositions = { ...prev }
+        
+        Object.entries(newPositions).forEach(([otherPlayer, otherTokens]) => {
+          if (otherPlayer !== currentPlayer) {
+            otherTokens.forEach((otherToken, otherIndex) => {
+              if (otherToken.r === finalPosition.r && otherToken.c === finalPosition.c) {
+                // Send opponent token back to home
+                const homePositions = {
+                  Green: [{r:2,c:2}, {r:2,c:4}, {r:4,c:2}, {r:4,c:4}],
+                  Yellow: [{r:2,c:11}, {r:2,c:13}, {r:4,c:11}, {r:4,c:13}],
+                  Red: [{r:11,c:2}, {r:11,c:4}, {r:13,c:2}, {r:13,c:4}],
+                  Blue: [{r:11,c:11}, {r:11,c:13}, {r:13,c:11}, {r:13,c:13}]
+                }
+                const playerHomes = homePositions[otherPlayer as keyof typeof homePositions]
+                const emptyHome = playerHomes.find(pos => 
+                  !otherTokens.some(t => t.r === pos.r && t.c === pos.c)
+                )
+                if (emptyHome) {
+                  newPositions[otherPlayer as keyof typeof newPositions][otherIndex] = emptyHome
+                  setLastCapture(`${currentPlayer} captured ${otherPlayer}'s token!`)
+                  setGameHistory(prev => [...prev, `${currentPlayer} captured ${otherPlayer}'s token!`])
+                  capturedOpponent = true
+                  
+                  if (lightingEffects) {
+                    const cell = 600 / 15
+                    createParticles(finalPosition.c * cell + cell/2, finalPosition.r * cell + cell/2, '#ff4444', 20)
+                  }
+                }
+              }
+            })
+          }
+        })
+        
+        return newPositions
+      })
+    }
+    
+    // Handle winning condition
+    if (isCenter) {
+      setTokensInHome(prev => ({ ...prev, [currentPlayer]: prev[currentPlayer as keyof typeof prev] + 1 }))
+    }
     
     setTimeout(() => {
       setGameStatus(`${currentPlayer} moved ${diceValue} steps`)
       setSelectedToken(null)
       
-      // Check for win condition (all 4 tokens in center)
-      const homePositions = tokensInHome[currentPlayer as keyof typeof tokensInHome]
+      // Check for win condition
+      const homePositions = tokensInHome[currentPlayer as keyof typeof tokensInHome] + (isCenter ? 1 : 0)
       if (homePositions >= 4) {
         setWinner(currentPlayer)
         setGameStatus(`🎉 ${currentPlayer} WINS! 🎉`)
-        
-        // Update scores in tournament mode
-        if (tournamentMode) {
-          setPlayerScores(prev => ({
-            ...prev,
-            [currentPlayer]: prev[currentPlayer as keyof typeof prev] + 1
-          }))
-        }
-        
-        // Create victory particles
-        if (lightingEffects) {
-          createParticles(300, 300, playerColors[currentPlayer as keyof typeof playerColors], 50)
-        }
-        
-        // Update achievements and stats
-        setTotalGamesPlayed(prev => prev + 1)
-        setStreakCount(prev => prev + 1)
-        
-        // Check for achievements
-        const newAchievements = []
-        if (moveCount <= 20) newAchievements.push('Speed Demon')
-        if (gameTime <= 300) newAchievements.push('Lightning Fast')
-        if (streakCount >= 3) newAchievements.push('Hat Trick')
-        if (totalGamesPlayed >= 10) newAchievements.push('Veteran Player')
-        
-        setAchievements(prev => [...new Set([...prev, ...newAchievements])])
-        
-        // Update player rating
-        setPlayerRatings(prev => ({
-          ...prev,
-          [currentPlayer]: prev[currentPlayer as keyof typeof prev] + 50
-        }))
-        
-        // Record game replay
-        setGameReplay(prev => [...prev, {
-          type: 'victory',
-          player: currentPlayer,
-          timestamp: Date.now(),
-          gameState: { tokenPositions, moveCount, gameTime }
-        }])
-        
-        // Victory sound
-        if (soundEnabled) {
-          const victoryAudio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT')
-          victoryAudio.volume = 0.8
-          victoryAudio.play().catch(() => {})
-        }
         return
       }
       
@@ -482,7 +458,7 @@ export default function LudoGame() {
           setCanRoll(true)
         }, 300)
       }
-    }, 300)
+    }, 100)
   }
   
   const resetGame = () => {
@@ -965,38 +941,7 @@ export default function LudoGame() {
       })
     })
 
-    // Show possible moves for current player
-    if (diceValue && currentPlayer && !winner) {
-      const currentTokens = tokenPositions[currentPlayer as keyof typeof tokenPositions]
-      currentTokens.forEach((token, index) => {
-        const playerPath = getPlayerPath(currentPlayer)
-        const currentPathIndex = getTokenPathPosition(currentPlayer, token)
-        
-        if (currentPathIndex !== -1) {
-          let newPathIndex = currentPathIndex + diceValue
-          let targetPos = newPathIndex >= playerPath.length ? {r: 7, c: 7} : playerPath[newPathIndex]
-          
-          // Only draw if targetPos exists
-          if (targetPos && targetPos.r !== undefined && targetPos.c !== undefined) {
-            // Draw move indicator
-            ctx.strokeStyle = playerColors[currentPlayer as keyof typeof playerColors]
-            ctx.lineWidth = 3
-            ctx.setLineDash([5, 5])
-            ctx.beginPath()
-            ctx.moveTo(token.c * cell + cell/2, token.r * cell + cell/2)
-            ctx.lineTo(targetPos.c * cell + cell/2, targetPos.r * cell + cell/2)
-            ctx.stroke()
-            ctx.setLineDash([])
-            
-            // Draw target indicator
-            ctx.fillStyle = playerColors[currentPlayer as keyof typeof playerColors] + '40'
-            ctx.beginPath()
-            ctx.arc(targetPos.c * cell + cell/2, targetPos.r * cell + cell/2, cell/4, 0, 2*Math.PI)
-            ctx.fill()
-          }
-        }
-      })
-    }
+
 
     // Enhanced tokens with 3D effect and animations
     Object.entries(tokenPositions).forEach(([player, tokens]) => {
@@ -1017,6 +962,18 @@ export default function LudoGame() {
           glowGradient.addColorStop(0, 'rgba(255, 215, 0, 0.8)')
           glowGradient.addColorStop(1, 'rgba(255, 215, 0, 0)')
           ctx.fillStyle = glowGradient
+          ctx.fill()
+        }
+        
+        // Animating token glow
+        if (animatingToken && player === animatingToken.player && index === animatingToken.tokenIndex) {
+          const animRadius = radius + 6 + Math.sin(Date.now() * 0.02) * 4
+          ctx.beginPath()
+          ctx.arc(x, y, animRadius, 0, 2*Math.PI)
+          const animGradient = ctx.createRadialGradient(x, y, radius, x, y, animRadius)
+          animGradient.addColorStop(0, 'rgba(0, 255, 0, 0.6)')
+          animGradient.addColorStop(1, 'rgba(0, 255, 0, 0)')
+          ctx.fillStyle = animGradient
           ctx.fill()
         }
         
