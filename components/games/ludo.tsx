@@ -21,7 +21,8 @@ export default function LudoGame() {
   const [tokensInHome, setTokensInHome] = useState({
     Green: 0, Yellow: 0, Red: 0, Blue: 0
   })
-  const [gameMode, setGameMode] = useState<'human' | 'ai'>('human')
+  const [playerCount, setPlayerCount] = useState<2 | 4>(4)
+  const [activePlayers, setActivePlayers] = useState<string[]>(['Green', 'Yellow', 'Blue', 'Red'])
   const [gameHistory, setGameHistory] = useState<string[]>([])
   const [isAnimating, setIsAnimating] = useState(false)
   const [lastCapture, setLastCapture] = useState<string | null>(null)
@@ -98,7 +99,20 @@ export default function LudoGame() {
     return path.findIndex(pos => pos && pos.r === token.r && pos.c === token.c)
   }
 
-  const players = ['Green', 'Yellow', 'Blue', 'Red']
+  const allPlayers = ['Green', 'Yellow', 'Blue', 'Red']
+  const players = activePlayers
+  
+  const setPlayerMode = (count: 2 | 4) => {
+    setPlayerCount(count)
+    if (count === 2) {
+      setActivePlayers(['Green', 'Blue'])
+      setCurrentPlayer('Green')
+    } else {
+      setActivePlayers(['Green', 'Yellow', 'Blue', 'Red'])
+      setCurrentPlayer('Green')
+    }
+    resetGame()
+  }
   const playerColors = {
     Green: '#228B22',
     Yellow: '#FFD700', 
@@ -204,14 +218,17 @@ export default function LudoGame() {
       
       const playerPath = getPlayerPath(currentPlayer)
       const currentPathIndex = getTokenPathPosition(currentPlayer, token)
-      return currentPathIndex !== -1 && currentPathIndex + value < playerPath.length
+      // Allow movement if token is on path and can move to valid position
+      if (currentPathIndex === -1) return false
+      const newPosition = currentPathIndex + value
+      return newPosition <= 57
     })
     
     if (!hasMovableTokens) {
       setGameStatus(`${currentPlayer} rolled ${value} - No valid moves!`)
       setTimeout(() => {
-        const currentIndex = players.indexOf(currentPlayer)
-        const nextPlayer = players[(currentIndex + 1) % 4]
+        const currentIndex = activePlayers.indexOf(currentPlayer)
+        const nextPlayer = activePlayers[(currentIndex + 1) % activePlayers.length]
         setCurrentPlayer(nextPlayer)
         setGameStatus(`${nextPlayer}'s turn`)
         setCanRoll(true)
@@ -229,12 +246,7 @@ export default function LudoGame() {
     
     setTimeout(() => setIsAnimating(false), 200)
     
-    // AI player logic
-    if (gameMode === 'ai' && currentPlayer !== 'Green') {
-      setTimeout(() => {
-        aiMakeMove(value)
-      }, 1500)
-    }
+    // AI logic removed for player modes
   }
   
   const aiMakeMove = (diceValue: number) => {
@@ -244,7 +256,13 @@ export default function LudoGame() {
                       (currentPlayer === 'Yellow' && token.r >= 1 && token.r <= 4 && token.c >= 10 && token.c <= 13) ||
                       (currentPlayer === 'Red' && token.r >= 10 && token.r <= 13 && token.c >= 1 && token.c <= 4) ||
                       (currentPlayer === 'Blue' && token.r >= 10 && token.r <= 13 && token.c >= 10 && token.c <= 13)
-      return !isInHome || diceValue === 6
+      
+      if (isInHome) return diceValue === 6
+      
+      const playerPath = getPlayerPath(currentPlayer)
+      const currentPathIndex = getTokenPathPosition(currentPlayer, token)
+      if (currentPathIndex === -1) return false
+      return currentPathIndex + diceValue <= 57
     })
     
     if (movableTokens.length > 0) {
@@ -278,8 +296,8 @@ export default function LudoGame() {
       }, 1000 / animationSpeed)
     } else {
       setTimeout(() => {
-        const currentIndex = players.indexOf(currentPlayer)
-        const nextPlayer = players[(currentIndex + 1) % 4]
+        const currentIndex = activePlayers.indexOf(currentPlayer)
+        const nextPlayer = activePlayers[(currentIndex + 1) % activePlayers.length]
         setCurrentPlayer(nextPlayer)
         setGameStatus(`${nextPlayer}'s turn`)
         setCanRoll(true)
@@ -322,7 +340,14 @@ export default function LudoGame() {
                       (currentPlayer === 'Red' && token.r >= 10 && token.r <= 13 && token.c >= 1 && token.c <= 4) ||
                       (currentPlayer === 'Blue' && token.r >= 10 && token.r <= 13 && token.c >= 10 && token.c <= 13)
       
-      const canMove = isInHome ? diceValue === 6 : true
+      let canMove = false
+      if (isInHome) {
+        canMove = diceValue === 6
+      } else {
+        const playerPath = getPlayerPath(currentPlayer)
+        const currentPathIndex = getTokenPathPosition(currentPlayer, token)
+        canMove = currentPathIndex !== -1 && currentPathIndex + diceValue <= 57
+      }
       
       if (canMove) {
         setSelectedToken(clickedTokenIndex)
@@ -366,15 +391,17 @@ export default function LudoGame() {
       if (currentPathIndex !== -1) {
         for (let i = 1; i <= diceValue; i++) {
           const newPathIndex = currentPathIndex + i
-          if (newPathIndex >= playerPath.length) {
-            movementPath.push({r: 7, c: 7}) // Center
+          // Victory center is at position 57 (after 5 home stretch positions: 52,53,54,55,56)
+          if (newPathIndex === 57) {
+            movementPath.push({r: 7, c: 7}) // Exact victory entry
             break
-          } else if (newPathIndex < playerPath.length) {
+          } else if (newPathIndex < 57 && newPathIndex < playerPath.length) {
             const newPos = playerPath[newPathIndex]
             if (newPos) {
               movementPath.push(newPos)
             }
           }
+          // If dice roll would overshoot victory center, no movement allowed
         }
       }
     }
@@ -489,8 +516,8 @@ export default function LudoGame() {
         setGameStatus(`${currentPlayer} gets another turn!`)
       } else {
         setTimeout(() => {
-          const currentIndex = players.indexOf(currentPlayer)
-          const nextPlayer = players[(currentIndex + 1) % 4]
+          const currentIndex = activePlayers.indexOf(currentPlayer)
+          const nextPlayer = activePlayers[(currentIndex + 1) % activePlayers.length]
           setCurrentPlayer(nextPlayer)
           setGameStatus(`${nextPlayer}'s turn`)
           setCanRoll(true)
@@ -1239,7 +1266,10 @@ export default function LudoGame() {
       <div className="glass border-b border-border/50 p-2 sm:p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-4">
-            <button className="flex items-center gap-1 sm:gap-2 text-muted-foreground hover:text-foreground transition-colors">
+            <button 
+              onClick={() => window.history.back()}
+              className="flex items-center gap-1 sm:gap-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            >
               <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
@@ -1276,6 +1306,24 @@ export default function LudoGame() {
         </div>
         <div className="p-4 sm:p-6 rounded-xl shadow-lg w-full lg:min-w-80 lg:max-w-80 bg-gradient-to-br from-blue-900/20 via-gray-900/80 to-black/90 backdrop-blur-md border border-border/50">
           <h3 className="text-lg sm:text-2xl font-bold mb-4 text-center text-foreground animate-glow">🎲 ULTIMATE LUDO 🎲</h3>
+          
+          <div className="mb-4 p-3 bg-muted/20 rounded-lg border border-border/30">
+            <div className="text-xs font-semibold text-primary mb-2">Players:</div>
+            <div className="flex gap-2 text-xs">
+              <button 
+                onClick={() => setPlayerMode(2)}
+                className={`px-3 py-1 rounded ${playerCount === 2 ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'}`}
+              >
+                2 Players
+              </button>
+              <button 
+                onClick={() => setPlayerMode(4)}
+                className={`px-3 py-1 rounded ${playerCount === 4 ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'}`}
+              >
+                4 Players
+              </button>
+            </div>
+          </div>
           
           {/* Current Player */}
           <div className="text-center mb-4">
@@ -1320,7 +1368,7 @@ export default function LudoGame() {
             <Button 
               onClick={rollDice} 
               className={`w-full transition-all duration-200 rounded-lg text-sm sm:text-base ${
-                canRoll && !isDiceRolling ? 'hover:scale-105 bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 cursor-not-allowed text-gray-500'
+                canRoll && !isDiceRolling ? 'hover:scale-105 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer' : 'bg-gray-300 cursor-not-allowed text-gray-500'
               }`} 
               size="lg"
               disabled={!canRoll || isDiceRolling}
@@ -1351,7 +1399,7 @@ export default function LudoGame() {
           {/* Player Stats */}
           <div className="mt-4 space-y-2">
             <div className="text-xs text-muted-foreground text-center mb-2">Player Status</div>
-            {players.map(player => (
+            {activePlayers.map(player => (
               <div key={player} className={`flex items-center justify-between text-xs p-2 rounded-lg ${
                 player === currentPlayer ? 'bg-primary/20 border border-primary/30' : 'bg-muted/20 border border-border/30'
               }`}>
@@ -1407,7 +1455,7 @@ export default function LudoGame() {
           <div className="mt-4">
             <Button 
               onClick={resetGame} 
-              className="w-full bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
+              className="w-full bg-gray-600 hover:bg-gray-700 text-white rounded-lg cursor-pointer"
               size="sm"
             >
               🔄 Reset Game
