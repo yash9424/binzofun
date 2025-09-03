@@ -58,6 +58,8 @@ export default function LudoGame() {
   const [cinematicMode, setCinematicMode] = useState(false)
   const [animationFrame, setAnimationFrame] = useState(0)
   const [animatingToken, setAnimatingToken] = useState<{player: string, tokenIndex: number, path: {r: number, c: number}[], currentStep: number} | null>(null)
+  const [isDiceRolling, setIsDiceRolling] = useState(false)
+  const [diceAnimationValue, setDiceAnimationValue] = useState(0)
   
   // Define correct Ludo paths with proper connections
   const getPlayerPath = (player: string) => {
@@ -103,6 +105,19 @@ export default function LudoGame() {
     Red: '#DC143C',
     Blue: '#1E90FF'
   }
+  
+  // Dice dot patterns for each face (1-6)
+  const getDiceDotPattern = (value: number, position: number): boolean => {
+    const patterns = {
+      1: [4], // center
+      2: [0, 8], // top-left, bottom-right
+      3: [0, 4, 8], // diagonal
+      4: [0, 2, 6, 8], // corners
+      5: [0, 2, 4, 6, 8], // corners + center
+      6: [0, 2, 3, 5, 6, 8] // two columns
+    }
+    return patterns[value as keyof typeof patterns]?.includes(position) || false
+  }
 
   // Particle system management
   const createParticles = (x: number, y: number, color: string, count = 10) => {
@@ -139,13 +154,36 @@ export default function LudoGame() {
   }, [])
 
   const rollDice = () => {
-    if (!canRoll || isAnimating) return
+    if (!canRoll || isAnimating || isDiceRolling) return
     
     setIsAnimating(true)
-    const value = Math.floor(Math.random() * 6) + 1
-    setDiceValue(value)
+    setIsDiceRolling(true)
     setCanRoll(false)
     
+    // Start dice rolling animation
+    let animationCount = 0
+    const maxAnimations = 10 // 1 second with 100ms intervals
+    
+    const diceAnimation = setInterval(() => {
+      const randomValue = Math.floor(Math.random() * 6) + 1
+      setDiceAnimationValue(randomValue)
+      animationCount++
+      
+      if (animationCount >= maxAnimations) {
+        clearInterval(diceAnimation)
+        // Set final dice value
+        const finalValue = Math.floor(Math.random() * 6) + 1
+        setDiceValue(finalValue)
+        setDiceAnimationValue(0)
+        setIsDiceRolling(false)
+        
+        // Continue with game logic
+        processDiceRoll(finalValue)
+      }
+    }, 100)
+  }
+  
+  const processDiceRoll = (value: number) => {
     // Create dice particles
     if (lightingEffects) {
       createParticles(300, 100, playerColors[currentPlayer as keyof typeof playerColors], 15)
@@ -1253,20 +1291,41 @@ export default function LudoGame() {
           {/* Dice */}
           <div className="text-center mb-4">
             <div 
-              className="w-16 h-16 sm:w-20 sm:h-20 bg-white border-2 border-gray-300 rounded-xl flex items-center justify-center text-3xl sm:text-4xl font-bold mb-3 mx-auto shadow-md cursor-pointer hover:shadow-lg transition-all hover:border-blue-400"
+              className={`w-16 h-16 sm:w-20 sm:h-20 bg-white border-2 border-gray-300 rounded-xl flex items-center justify-center mb-3 mx-auto shadow-md cursor-pointer hover:shadow-lg transition-all hover:border-blue-400 ${isDiceRolling ? 'animate-spin' : ''}`}
               onClick={rollDice}
+              style={{
+                background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+                boxShadow: isDiceRolling ? '0 0 20px rgba(59, 130, 246, 0.5)' : '5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff'
+              }}
             >
-              <span className="text-blue-600 text-3xl sm:text-5xl font-black">{diceValue || '🎲'}</span>
+              <div className="grid grid-cols-3 gap-0 w-10 h-10 sm:w-12 sm:h-12 p-1">
+                {Array.from({ length: 9 }, (_, i) => {
+                  const currentValue = isDiceRolling ? diceAnimationValue : (diceValue || 1)
+                  const shouldShowDot = getDiceDotPattern(currentValue, i)
+                  return (
+                    <div
+                      key={i}
+                      className="flex items-center justify-center w-full h-full"
+                    >
+                      <div
+                        className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200 ${
+                          shouldShowDot ? 'bg-gray-800' : 'bg-transparent'
+                        }`}
+                      />
+                    </div>
+                  )
+                })}
+              </div>
             </div>
             <Button 
               onClick={rollDice} 
               className={`w-full transition-all duration-200 rounded-lg text-sm sm:text-base ${
-                canRoll ? 'hover:scale-105 bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 cursor-not-allowed text-gray-500'
+                canRoll && !isDiceRolling ? 'hover:scale-105 bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 cursor-not-allowed text-gray-500'
               }`} 
               size="lg"
-              disabled={!canRoll}
+              disabled={!canRoll || isDiceRolling}
             >
-              {canRoll ? 'Roll Dice' : 'Wait...'}
+              {isDiceRolling ? 'Rolling...' : (canRoll ? 'Roll Dice' : 'Wait...')}
             </Button>
           </div>
           
