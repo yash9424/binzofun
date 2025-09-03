@@ -702,38 +702,77 @@ export default function LudoGame() {
       return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
     }
 
-    // Enhanced home areas with better colors and effects
-    // Green home (top-left)
-    for (let r = 0; r < 6; r++) {
-      for (let c = 0; c < 6; c++) {
-        const isTokenArea = r >= 1 && r <= 4 && c >= 1 && c <= 4
-        drawCell(r, c, isTokenArea ? '#98FB98' : '#2E8B57', true, isTokenArea)
-      }
+    // Redesigned elegant home bases with rounded design
+    const drawHomeBase = (centerX: number, centerY: number, outerColor: string, innerColor: string, playerName: string) => {
+      const baseSize = 6 * cell
+      const innerSize = 4 * cell
+      
+      // Outer base with shadow
+      ctx.shadowColor = 'rgba(0,0,0,0.3)'
+      ctx.shadowBlur = 8
+      ctx.shadowOffsetX = 3
+      ctx.shadowOffsetY = 3
+      
+      // Outer rounded rectangle
+      const outerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, baseSize/2)
+      outerGradient.addColorStop(0, adjustBrightness(outerColor, 20))
+      outerGradient.addColorStop(0.7, outerColor)
+      outerGradient.addColorStop(1, adjustBrightness(outerColor, -30))
+      ctx.fillStyle = outerGradient
+      
+      ctx.beginPath()
+      ctx.roundRect(centerX - baseSize/2, centerY - baseSize/2, baseSize, baseSize, 15)
+      ctx.fill()
+      
+      // Inner token area
+      const innerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, innerSize/2)
+      innerGradient.addColorStop(0, '#FFFFFF')
+      innerGradient.addColorStop(0.3, adjustBrightness(innerColor, 40))
+      innerGradient.addColorStop(0.7, innerColor)
+      innerGradient.addColorStop(1, adjustBrightness(innerColor, -20))
+      ctx.fillStyle = innerGradient
+      
+      ctx.beginPath()
+      ctx.roundRect(centerX - innerSize/2, centerY - innerSize/2, innerSize, innerSize, 12)
+      ctx.fill()
+      
+      // Reset shadow
+      ctx.shadowColor = 'transparent'
+      ctx.shadowBlur = 0
+      ctx.shadowOffsetX = 0
+      ctx.shadowOffsetY = 0
+      
+      // Decorative border
+      ctx.strokeStyle = adjustBrightness(outerColor, -40)
+      ctx.lineWidth = 3
+      ctx.beginPath()
+      ctx.roundRect(centerX - baseSize/2, centerY - baseSize/2, baseSize, baseSize, 15)
+      ctx.stroke()
+      
+      ctx.strokeStyle = adjustBrightness(innerColor, -30)
+      ctx.lineWidth = 2
+      ctx.beginPath()
+      ctx.roundRect(centerX - innerSize/2, centerY - innerSize/2, innerSize, innerSize, 12)
+      ctx.stroke()
+      
+      // Player name label
+      ctx.fillStyle = adjustBrightness(outerColor, -50)
+      ctx.font = 'bold 14px Arial'
+      ctx.textAlign = 'center'
+      ctx.shadowColor = 'rgba(255,255,255,0.5)'
+      ctx.shadowBlur = 2
+      ctx.fillText(playerName, centerX, centerY - baseSize/2 + 20)
+      
+      // Reset effects
+      ctx.shadowColor = 'transparent'
+      ctx.shadowBlur = 0
     }
     
-    // Yellow home (top-right)
-    for (let r = 0; r < 6; r++) {
-      for (let c = 9; c < 15; c++) {
-        const isTokenArea = r >= 1 && r <= 4 && c >= 10 && c <= 13
-        drawCell(r, c, isTokenArea ? '#FFFACD' : '#DAA520', true, isTokenArea)
-      }
-    }
-    
-    // Red home (bottom-left)
-    for (let r = 9; r < 15; r++) {
-      for (let c = 0; c < 6; c++) {
-        const isTokenArea = r >= 10 && r <= 13 && c >= 1 && c <= 4
-        drawCell(r, c, isTokenArea ? '#FFA07A' : '#B22222', true, isTokenArea)
-      }
-    }
-    
-    // Blue home (bottom-right)
-    for (let r = 9; r < 15; r++) {
-      for (let c = 9; c < 15; c++) {
-        const isTokenArea = r >= 10 && r <= 13 && c >= 10 && c <= 13
-        drawCell(r, c, isTokenArea ? '#B0E0E6' : '#4169E1', true, isTokenArea)
-      }
-    }
+    // Draw all four home bases
+    drawHomeBase(3 * cell, 3 * cell, '#2E8B57', '#98FB98', 'GREEN')
+    drawHomeBase(12 * cell, 3 * cell, '#DAA520', '#FFFACD', 'YELLOW')
+    drawHomeBase(3 * cell, 12 * cell, '#B22222', '#FFA07A', 'RED')
+    drawHomeBase(12 * cell, 12 * cell, '#4169E1', '#B0E0E6', 'BLUE')
 
     // Enhanced path with circuit markers
     const drawPathCell = (r: number, c: number, pathIndex = -1) => {
@@ -1157,55 +1196,54 @@ export default function LudoGame() {
   }, [tokenPositions, selectedToken, currentPlayer, canRoll, winner, diceValue, isAnimating, lastCapture, animationFrame, theme, lightingEffects, cinematicMode, particles])
 
   return (
-    <div className={`min-h-screen p-4 flex items-center justify-center ${
-      theme === 'neon' ? 'bg-gradient-to-br from-black via-purple-900 to-black' :
-      theme === 'modern' ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black' :
-      cinematicMode ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-black' :
-      'bg-gradient-to-br from-green-50 via-yellow-50 to-red-50'
-    }`}>
-      <div className="flex gap-6 items-start max-w-7xl w-full">
-        <div className="relative">
+    <div className="min-h-screen bg-background">
+      {/* Gaming Header */}
+      <div className="glass border-b border-border/50 p-2 sm:p-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button className="flex items-center gap-1 sm:gap-2 text-muted-foreground hover:text-foreground transition-colors">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="hidden sm:inline">Back to Games</span>
+            </button>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="text-xl sm:text-2xl">🎲</div>
+            <h1 className="text-lg sm:text-2xl font-bold text-foreground animate-glow">LUDO MASTER</h1>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="text-primary font-bold text-sm sm:text-lg">₹3000.00</div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Game Content */}
+      <div className="p-2 sm:p-4 flex items-center justify-center">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-center lg:items-start max-w-7xl w-full">
+        <div className="relative w-full max-w-md lg:max-w-none">
           <canvas 
             ref={canvasRef} 
             width={600} 
             height={600} 
-            className={`shadow-2xl rounded-lg cursor-pointer ${
-              theme === 'neon' ? 'border-4 border-cyan-400 shadow-cyan-400/50' :
-              theme === 'modern' ? 'border-4 border-gray-600 shadow-gray-600/50' :
-              cinematicMode ? 'border-4 border-purple-600 shadow-purple-600/50' :
-              'border-4 border-yellow-600 shadow-yellow-600/30'
-            }`}
+            className="shadow-2xl rounded-xl cursor-pointer border border-gray-200 bg-white w-full h-auto max-w-[90vw] max-h-[90vw] sm:max-w-[600px] sm:max-h-[600px]"
             onClick={handleCanvasClick}
+            style={{ aspectRatio: '1/1' }}
           />
           {isPaused && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-              <div className="text-white text-4xl font-bold">⏸️ PAUSED</div>
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+              <div className="text-white text-2xl sm:text-4xl font-bold">⏸️ PAUSED</div>
             </div>
           )}
         </div>
-        <div className={`p-6 rounded-lg shadow-xl min-w-80 ${
-          theme === 'neon' ? 'bg-black border-2 border-cyan-400 text-cyan-100 shadow-cyan-400/30' :
-          theme === 'modern' ? 'bg-gray-800 text-white border-2 border-gray-600 shadow-gray-600/30' :
-          cinematicMode ? 'bg-gray-900 text-white border-2 border-purple-600 shadow-purple-600/30' :
-          'bg-white border-2 border-yellow-400 shadow-yellow-400/20'
-        }`}>
-          <h3 className={`text-2xl font-bold mb-4 text-center ${
-            theme === 'neon' ? 'text-cyan-400' :
-            theme === 'modern' ? 'text-white' :
-            cinematicMode ? 'text-purple-400' :
-            'text-yellow-800'
-          }`}>🎲 ULTIMATE LUDO 🎲</h3>
+        <div className="p-4 sm:p-6 rounded-xl shadow-lg w-full lg:min-w-80 lg:max-w-80 bg-gradient-to-br from-blue-900/20 via-gray-900/80 to-black/90 backdrop-blur-md border border-border/50">
+          <h3 className="text-lg sm:text-2xl font-bold mb-4 text-center text-foreground animate-glow">🎲 ULTIMATE LUDO 🎲</h3>
           
           {/* Current Player */}
           <div className="text-center mb-4">
-            <div className={`text-sm mb-1 ${
-              theme === 'neon' ? 'text-cyan-300' :
-              theme === 'modern' ? 'text-gray-300' :
-              cinematicMode ? 'text-purple-300' :
-              'text-gray-600'
-            }`}>Current Player</div>
+            <div className="text-xs sm:text-sm mb-1 text-muted-foreground">Current Player</div>
             <div 
-              className="inline-block px-3 py-1 rounded-full text-white font-bold"
+              className="inline-block px-3 py-1 rounded-full text-white font-bold text-sm"
               style={{ backgroundColor: playerColors[currentPlayer as keyof typeof playerColors] }}
             >
               {currentPlayer}
@@ -1215,15 +1253,15 @@ export default function LudoGame() {
           {/* Dice */}
           <div className="text-center mb-4">
             <div 
-              className="w-20 h-20 bg-white border-4 border-gray-800 rounded-lg flex items-center justify-center text-4xl font-bold mb-3 mx-auto shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
+              className="w-16 h-16 sm:w-20 sm:h-20 bg-white border-2 border-gray-300 rounded-xl flex items-center justify-center text-3xl sm:text-4xl font-bold mb-3 mx-auto shadow-md cursor-pointer hover:shadow-lg transition-all hover:border-blue-400"
               onClick={rollDice}
             >
-              <span className="text-red-600 text-5xl font-black">{diceValue || '🎲'}</span>
+              <span className="text-blue-600 text-3xl sm:text-5xl font-black">{diceValue || '🎲'}</span>
             </div>
             <Button 
               onClick={rollDice} 
-              className={`w-full transition-all duration-200 ${
-                canRoll ? 'hover:scale-105 bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed'
+              className={`w-full transition-all duration-200 rounded-lg text-sm sm:text-base ${
+                canRoll ? 'hover:scale-105 bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 cursor-not-allowed text-gray-500'
               }`} 
               size="lg"
               disabled={!canRoll}
@@ -1234,26 +1272,16 @@ export default function LudoGame() {
           
           {/* Game Status */}
           <div className="text-center">
-            <div className={`text-sm mb-1 ${
-              theme === 'neon' ? 'text-cyan-300' :
-              theme === 'modern' ? 'text-gray-300' :
-              cinematicMode ? 'text-purple-300' :
-              'text-gray-600'
-            }`}>Status</div>
-            <div className={`text-sm font-medium px-3 py-2 rounded ${
-              theme === 'neon' ? 'text-cyan-100 bg-cyan-900/30 border border-cyan-400/30' :
-              theme === 'modern' ? 'text-white bg-gray-700 border border-gray-600' :
-              cinematicMode ? 'text-purple-100 bg-purple-900/30 border border-purple-400/30' :
-              'text-gray-800 bg-yellow-50 border border-yellow-200'
-            }`}>
+            <div className="text-sm mb-1 text-muted-foreground">Status</div>
+            <div className="text-sm font-medium px-3 py-2 rounded-lg text-foreground bg-muted/30 border border-border/30">
               {gameStatus}
             </div>
           </div>
           
           {/* Game Rules */}
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-            <div className="text-xs font-semibold text-blue-800 mb-2">Game Rules:</div>
-            <div className="text-xs text-blue-700 space-y-1">
+          <div className="mt-4 p-3 bg-muted/20 rounded-lg border border-border/30">
+            <div className="text-xs font-semibold text-primary mb-2">Game Rules:</div>
+            <div className="text-xs text-muted-foreground space-y-1">
               <div>• Roll 6 to get extra turn</div>
               <div>• Click tokens to move them</div>
               <div>• Land on opponents to send them home</div>
@@ -1263,19 +1291,19 @@ export default function LudoGame() {
           
           {/* Player Stats */}
           <div className="mt-4 space-y-2">
-            <div className="text-xs text-gray-600 text-center mb-2">Player Status</div>
+            <div className="text-xs text-muted-foreground text-center mb-2">Player Status</div>
             {players.map(player => (
-              <div key={player} className={`flex items-center justify-between text-xs p-2 rounded ${
-                player === currentPlayer ? 'bg-yellow-100 border border-yellow-300' : 'bg-gray-50'
+              <div key={player} className={`flex items-center justify-between text-xs p-2 rounded-lg ${
+                player === currentPlayer ? 'bg-primary/20 border border-primary/30' : 'bg-muted/20 border border-border/30'
               }`}>
                 <div className="flex items-center">
                   <div 
                     className="w-3 h-3 rounded-full mr-2"
                     style={{ backgroundColor: playerColors[player as keyof typeof playerColors] }}
                   ></div>
-                  <span className={player === currentPlayer ? 'font-bold' : ''}>{player}</span>
+                  <span className={player === currentPlayer ? 'font-bold text-primary' : 'text-foreground'}>{player}</span>
                 </div>
-                <div className="text-gray-500">
+                <div className="text-muted-foreground">
                   {player === currentPlayer ? '👑' : '4 tokens'}
                 </div>
               </div>
@@ -1284,12 +1312,12 @@ export default function LudoGame() {
           
           {/* Winner Display */}
           {winner && (
-            <div className="mt-4 p-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg text-center">
+            <div className="mt-4 p-4 bg-gradient-to-r from-primary to-accent rounded-xl text-center border border-primary/30">
               <div className="text-lg font-bold text-white mb-2">🏆 GAME OVER 🏆</div>
               <div className="text-white font-semibold">{winner} Wins!</div>
               <Button 
                 onClick={resetGame} 
-                className="mt-2 bg-white text-gray-800 hover:bg-gray-100"
+                className="mt-2 bg-white text-gray-800 hover:bg-gray-100 rounded-lg"
                 size="sm"
               >
                 New Game
@@ -1298,20 +1326,20 @@ export default function LudoGame() {
           )}
           
           {/* Game Stats */}
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-            <div className="text-xs text-gray-600 text-center mb-2">Game Stats</div>
-            <div className="text-xs text-gray-700 space-y-1">
+          <div className="mt-4 p-3 bg-muted/20 rounded-lg border border-border/30">
+            <div className="text-xs text-muted-foreground text-center mb-2">Game Stats</div>
+            <div className="text-xs text-foreground space-y-1">
               <div className="flex justify-between">
                 <span>Total Moves:</span>
-                <span className="font-semibold">{moveCount}</span>
+                <span className="font-semibold text-primary">{moveCount}</span>
               </div>
               <div className="flex justify-between">
                 <span>Last Roll:</span>
-                <span className="font-semibold">{diceValue || '-'}</span>
+                <span className="font-semibold text-primary">{diceValue || '-'}</span>
               </div>
               <div className="flex justify-between">
                 <span>Game Status:</span>
-                <span className="font-semibold">{winner ? 'Finished' : 'Playing'}</span>
+                <span className="font-semibold text-primary">{winner ? 'Finished' : 'Playing'}</span>
               </div>
             </div>
           </div>
@@ -1320,13 +1348,14 @@ export default function LudoGame() {
           <div className="mt-4">
             <Button 
               onClick={resetGame} 
-              className="w-full bg-red-600 hover:bg-red-700 text-white"
+              className="w-full bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
               size="sm"
             >
               🔄 Reset Game
             </Button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   )
